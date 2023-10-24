@@ -66,19 +66,26 @@ module GX
 
     def run()
       @config.load_from_file
-      # Correcting the fzf interaction part
-      names_display = @config.vaults.map do |vault|
-        vault.mounted? ? "#{vault.name} [#{ "open".colorize(:green) }]" : vault.name
+
+      names_display = {} of String => NamedTuple(vault: Vault, ansi_name: String)
+      @config.vaults.each do |vault|
+        result_name = vault.mounted? ? "#{vault.name} [open]" : vault.name
+        ansi_name = vault.mounted? ? "#{vault.name} [#{ "open".colorize(:green) }]" : vault.name
+
+        names_display[result_name] = {
+          vault: vault,
+          ansi_name: ansi_name
+        }
       end
 
-      selected_vault_name = Fzf.run(names_display.sort)
-      puts ">> #{selected_vault_name}".colorize(:yellow)
-      selected_vault = @config.vaults.find { |v| v.name == selected_vault_name }
+      result_vault_name = Fzf.run(names_display.values.map(&.[:ansi_name]).sort)
+      selected_vault = names_display[result_vault_name][:vault]
+      puts ">> #{selected_vault.name}".colorize(:yellow)
 
       if selected_vault
         selected_vault.mounted? ? selected_vault.unmount : selected_vault.mount
       else
-        STDERR.puts "Vault not found.".colorize(:red)
+        STDERR.puts "Vault not found: #{selected_vault}.".colorize(:red)
       end
 
     end
