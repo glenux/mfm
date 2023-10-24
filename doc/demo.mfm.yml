@@ -1,0 +1,23 @@
+---
+
+version: 1
+
+global:
+  mountpoint: "~/mnt"
+
+filesystems:
+  - type: gocryptfs
+    name: "Personal - Encrypted Credentials"
+    encrypted_path: "/path/to/credentials/vault"
+
+  - type: httpdirfs
+    name: "Public - Remote Debian Repository"
+    url: "http://ftp.debian.org/debian/"
+
+  - type: sshfs
+    name: "Personal - Remote Media Server"
+    remote_user: user
+    remote_host: mediaserver.local
+    remote_port: 22
+    remote_path: "/remote/path/to/media"
+#

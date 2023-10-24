@@ -47,6 +47,9 @@ Commands:
     edit                             Adjust the configuration
 ```
 
+### Demo
+
+<video src="https://code.apps.glenux.net/glenux/mfm/raw/branch/develop/doc/output.webm" width="810" height="595" style="max-width: 100%;" controls="controls"></video>
 
 ## Configuration
 
