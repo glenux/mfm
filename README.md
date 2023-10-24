@@ -71,6 +71,11 @@ filesystems:
     remote_host: "mediaserver.local"
     remote_path: "/mnt/largedisk/music"
     remote_port: 22
+
+  - type: httpdirfs
+    name: "Debian Repository"
+    url: "http://ftp.debian.org/debian/"
+
   
   # Incorporate more vaults as necessary
 ```
