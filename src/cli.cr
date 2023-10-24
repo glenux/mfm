@@ -67,7 +67,7 @@ module GX
     def run()
       @config.load_from_file
 
-      names_display = {} of String => NamedTuple(filesystem: GoCryptFS, ansi_name: String)
+      names_display = {} of String => NamedTuple(filesystem: Filesystem, ansi_name: String)
       @config.filesystems.each do |filesystem|
         result_name = filesystem.mounted? ? "#{filesystem.name} [open]" : filesystem.name
         ansi_name = filesystem.mounted? ? "#{filesystem.name} [#{ "open".colorize(:green) }]" : filesystem.name

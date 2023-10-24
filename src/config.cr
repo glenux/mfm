@@ -1,5 +1,5 @@
 
-require "./filesystems/gocryptfs"
+require "./filesystems"
 
 module GX
   class Config
@@ -13,7 +13,7 @@ module GX
     record AddArgs, name : String, path : String
     record DelArgs, name : String
 
-    getter filesystems : Array(GoCryptFS)
+    getter filesystems : Array(Filesystem)
     getter home_dir : String
     property mode : Mode
     property path : String
@@ -28,30 +28,31 @@ module GX
       @home_dir = ENV["HOME"]
 
       @mode = Mode::Run
-      @filesystems = [] of GoCryptFS
+      @filesystems = [] of Filesystem
       @path = File.join(@home_dir, ".config", DEFAULT_CONFIG_PATH)
       @args = NoArgs
     end
 
     def load_from_file
-      @filesystems = [] of GoCryptFS
+      @filesystems = [] of Filesystem
 
       if !File.exists? @path
         STDERR.puts "Error: file #{@path} does not exist!".colorize(:red)
         exit(1)
       end
-      load_vaults(@path)
+      load_filesystems(@path)
     end
 
-    private def load_vaults(config_path : String)
+    private def load_filesystems(config_path : String)
       yaml_data = YAML.parse(File.read(config_path))
       vaults_data = yaml_data["filesystems"].as_a
 
-      vaults_data.each do |vault_data|
-        type = vault_data["type"].as_s
-        name = vault_data["name"].as_s
-        encrypted_path = vault_data["encrypted_path"].as_s
-        @filesystems << GoCryptFS.new(name, encrypted_path, "#{name}.Open")
+      vaults_data.each do |filesystem_data|
+        type = filesystem_data["type"].as_s
+        name = filesystem_data["name"].as_s
+        # encrypted_path = filesystem_data["encrypted_path"].as_s
+        @filesystems << Filesystem.from_yaml(filesystem_data.to_yaml)
+        # @filesystems << Filesystem.new(name, encrypted_path, "#{name}.Open")
       end
     end
   end

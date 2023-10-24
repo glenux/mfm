@@ -2,9 +2,11 @@ require "shellwords"
 require "./filesystem"
 
 module GX
-  class GoCryptFS < Filesystem
+  class SshFS < Filesystem
     getter name : String = ""
-    getter encrypted_path : String = ""
+    getter remote_path : String = ""
+    getter remote_user : String = ""
+    getter remote_host : String = ""
 
     @[YAML::Field(key: "mount_dir", ignore: true)]
     getter mount_dir : String = ""
@@ -17,23 +19,23 @@ module GX
     end
 
     def mounted? : Bool
-      `mount`.includes?("#{encrypted_path} on #{mount_dir}")
+      `mount`.includes?("#{remote_user}@#{remote_host}:#{remote_path} on #{mount_dir}")
     end
 
     def mount
-      super do 
+      super do
         input = STDIN
         output = STDOUT
         error = STDERR
         process = Process.new(
-          "gocryptfs", 
-          ["-idle", "15m", encrypted_path, mount_dir], 
+          "sshfs", 
+          ["#{remote_user}@#{remote_host}:#{remote_path}", mount_dir], 
           input: input, 
           output: output, 
           error: error
         )
         unless process.wait.success?
-          puts "Error mounting the vault".colorize(:red)
+          puts "Error mounting the filesystem".colorize(:red)
           return
         end
       end
