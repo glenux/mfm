@@ -60,7 +60,7 @@ version: "1"
 global:
   mountpoint: "/home/user/mnt/{{name}}"
 
-fsmap:
+filesystems:
   - type: "gocryptfs"
     name: "Work - SSH Keys"
     encrypted_path: "/home/user/.ssh/keyring.work"

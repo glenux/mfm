@@ -2,7 +2,7 @@ require "yaml"
 require "colorize"
 require "json"
 
-require "./vault"
+require "./filesystems/gocryptfs"
 require "./config"
 require "./cli"
 

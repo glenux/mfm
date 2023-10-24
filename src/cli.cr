@@ -20,7 +20,7 @@ module GX
       add_args = { name: "", path: "" }
       delete_args = { name: "" }
       pparser = OptionParser.new do |parser|
-        parser.banner = "Usage: gx-vault [options]\n\nGlobal options"
+        parser.banner = "Usage: #{PROGRAM_NAME} [options]\n\nGlobal options"
 
         parser.on("-c", "--config FILE", "Set configuration file") do |path|
           @config.path = path
@@ -34,7 +34,7 @@ module GX
         parser.on("create", "Create vault") do 
           @config.mode = Config::Mode::Add
 
-          parser.banner = "Usage: gx-vault create [options]\n\nGlobal options"
+          parser.banner = "Usage: #{PROGRAM_NAME} create [options]\n\nGlobal options"
           parser.separator("\nCommand options")
 
           parser.on("-n", "--name", "Set vault name") do |name|
@@ -48,7 +48,7 @@ module GX
         parser.on("delete", "Delete vault") do 
           @config.mode = Config::Mode::Add
 
-          parser.banner = "Usage: gx-vault delete [options]\n\nGlobal options"
+          parser.banner = "Usage: #{PROGRAM_NAME} delete [options]\n\nGlobal options"
           parser.separator("\nCommand options")
 
           parser.on("-n", "--name", "Set vault name") do |name|
@@ -67,25 +67,25 @@ module GX
     def run()
       @config.load_from_file
 
-      names_display = {} of String => NamedTuple(vault: Vault, ansi_name: String)
-      @config.vaults.each do |vault|
-        result_name = vault.mounted? ? "#{vault.name} [open]" : vault.name
-        ansi_name = vault.mounted? ? "#{vault.name} [#{ "open".colorize(:green) }]" : vault.name
+      names_display = {} of String => NamedTuple(filesystem: GoCryptFS, ansi_name: String)
+      @config.filesystems.each do |filesystem|
+        result_name = filesystem.mounted? ? "#{filesystem.name} [open]" : filesystem.name
+        ansi_name = filesystem.mounted? ? "#{filesystem.name} [#{ "open".colorize(:green) }]" : filesystem.name
 
         names_display[result_name] = {
-          vault: vault,
+          filesystem: filesystem,
           ansi_name: ansi_name
         }
       end
 
-      result_vault_name = Fzf.run(names_display.values.map(&.[:ansi_name]).sort)
-      selected_vault = names_display[result_vault_name][:vault]
-      puts ">> #{selected_vault.name}".colorize(:yellow)
+      result_filesystem_name = Fzf.run(names_display.values.map(&.[:ansi_name]).sort)
+      selected_filesystem = names_display[result_filesystem_name][:filesystem]
+      puts ">> #{selected_filesystem.name}".colorize(:yellow)
 
-      if selected_vault
-        selected_vault.mounted? ? selected_vault.unmount : selected_vault.mount
+      if selected_filesystem
+        selected_filesystem.mounted? ? selected_filesystem.unmount : selected_filesystem.mount
       else
-        STDERR.puts "Vault not found: #{selected_vault}.".colorize(:red)
+        STDERR.puts "Vault not found: #{selected_filesystem}.".colorize(:red)
       end
 
     end

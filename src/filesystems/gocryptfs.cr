@@ -1,7 +1,7 @@
 require "shellwords"
 
 module GX
-  class Vault
+  class GoCryptFS
     getter name : String
     getter encrypted_path : String
     getter mount_dir : String
@@ -29,13 +29,13 @@ module GX
           puts "Error mounting the vault".colorize(:red)
           return
         end
-        puts "Vault #{name} is now available on #{mount_dir}".colorize(:green)
+        puts "GoCryptFS #{name} is now available on #{mount_dir}".colorize(:green)
       end
     end
 
     def unmount
       system("fusermount -u #{mount_dir.shellescape}")
-      puts "Vault #{name} is now closed.".colorize(:green)
+      puts "GoCryptFS #{name} is now closed.".colorize(:green)
     end
   end
 end
