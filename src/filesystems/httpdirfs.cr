@@ -2,9 +2,9 @@ require "shellwords"
 require "./filesystem"
 
 module GX
-  class GoCryptFS < Filesystem
+  class HttpDirFS < Filesystem
     getter name : String = ""
-    getter encrypted_path : String = ""
+    getter url : String = ""
 
     @[YAML::Field(key: "mount_dir", ignore: true)]
     getter mount_dir : String = ""
@@ -13,30 +13,31 @@ module GX
 
     def after_initialize()
       home_dir = ENV["HOME"] || raise "Home directory not found"
-      @mount_dir = File.join(home_dir, "mnt/#{@name}.Open")
+      @mount_dir = File.join(home_dir, "mnt/#{@name}")
     end
 
     def mounted? : Bool
-      `mount`.includes?("#{encrypted_path} on #{mount_dir}")
+      `mount`.includes?("httpdirfs on #{mount_dir}")
     end
 
     def mount
-      super do 
+      super do
         input = STDIN
         output = STDOUT
         error = STDERR
         process = Process.new(
-          "gocryptfs", 
-          ["-idle", "15m", encrypted_path, mount_dir], 
+          "httpdirfs", 
+          ["#{url}", mount_dir], 
           input: input, 
           output: output, 
           error: error
         )
         unless process.wait.success?
-          puts "Error mounting the vault".colorize(:red)
+          puts "Error mounting the filesystem".colorize(:red)
           return
         end
       end
     end
   end
 end
+

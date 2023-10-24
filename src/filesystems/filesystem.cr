@@ -8,7 +8,8 @@ module GX
 
     use_yaml_discriminator "type", {
       gocryptfs: GoCryptFS, 
-      sshfs: SshFS
+      sshfs: SshFS,
+      httpdirfs: HttpDirFS
     }
 
     property type : String

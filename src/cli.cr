@@ -69,8 +69,19 @@ module GX
 
       names_display = {} of String => NamedTuple(filesystem: Filesystem, ansi_name: String)
       @config.filesystems.each do |filesystem|
-        result_name = filesystem.mounted? ? "#{filesystem.name} [open]" : filesystem.name
-        ansi_name = filesystem.mounted? ? "#{filesystem.name} [#{ "open".colorize(:green) }]" : filesystem.name
+        fs_str = filesystem.type.ljust(12,' ')
+        result_name = 
+          if filesystem.mounted? 
+            "#{fs_str} #{filesystem.name} [open]"
+          else
+            "#{fs_str} #{filesystem.name}"
+          end
+        ansi_name = 
+          if filesystem.mounted? 
+            "#{fs_str.colorize(:dark_gray)} #{filesystem.name} [#{ "open".colorize(:green) }]"
+          else
+            "#{fs_str.colorize(:dark_gray)} #{filesystem.name}"
+          end
 
         names_display[result_name] = {
           filesystem: filesystem,
