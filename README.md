@@ -5,6 +5,8 @@
 # Copyright © 2023 Glenn Y. Rolland <glenux@glenux.net>
 -->
 
+[![Build Status](https://cicd.apps.glenux.net/api/badges/glenux/mfm/status.svg)](https://cicd.apps.glenux.net/glenux/mfm)
+
 # Minimalist Fuse Manager (MFM)
 
 MFM is a Crystal-lang CLI designed to streamline the management of various FUSE filesystems, such as sshfs, gocryptfs, httpdirfs, and more. Through its user-friendly interface, users can effortlessly mount and unmount filesystems, get real-time filesystem status, and handle errors proficiently.
