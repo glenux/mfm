@@ -24,8 +24,8 @@ steps:
   - name: publish:tag
     image: curlimages/curl
     environment:
-      PACKAGE_UPLOAD_URL: https://code.apps.glenux.net/api/packages/glenux/generic/mfm
-      RELEASES_URL: https://code.apps.glenux.net/api/repos/glenux/mfm/releases
+      PACKAGE_UPLOAD_URL: https://code.apps.glenux.net/api/v1/packages/glenux/generic/mfm
+      RELEASES_URL: https://code.apps.glenux.net/api/v1/repos/glenux/mfm/releases
       PACKAGE_BASENAME: mfm_linux_amd64
       RELEASE_UPLOAD_TOKEN:
         from_secret: RELEASE_UPLOAD_TOKEN
@@ -45,7 +45,8 @@ steps:
            --upload-file "/_cache/bin/$PACKAGE_BASENAME" \
            "$PACKAGE_UPLOAD_URL/$DRONE_TAG/$PACKAGE_BASENAME"
       - |
-        curl -X 'POST' \
+        set -x
+        curl -X POST \
           -H 'Authorization: token $RELEASE_UPLOAD_TOKEN' \
           -H 'accept: application/json' \
           -H 'Content-Type: application/json' \
