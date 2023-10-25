@@ -25,6 +25,7 @@ steps:
     image: curlimages/curl
     environment:
       PACKAGE_UPLOAD_URL: https://code.apps.glenux.net/api/packages/glenux/generic/mfm
+      RELEASES_URL: https://code.apps.glenux.net/api/repos/glenux/releases
       PACKAGE_BASENAME: mfm_linux_amd64
       PACKAGE_UPLOAD_TOKEN:
         from_secret: PACKAGE_UPLOAD_TOKEN
@@ -39,8 +40,22 @@ steps:
       - env |grep DRONE
       - |
         curl -H "Authorization: token $PACKAGE_UPLOAD_TOKEN" \
-             --upload-file /_cache/bin/$PACKAGE_BASENAME \
-           $PACKAGE_UPLOAD_URL/$DRONE_TAG/$PACKAGE_BASENAME
+           --upload-file "/_cache/bin/$PACKAGE_BASENAME" \
+           "$PACKAGE_UPLOAD_URL/$DRONE_TAG/$PACKAGE_BASENAME"
+      - |
+        curl -H "Authorization: token $PACKAGE_UPLOAD_TOKEN" \
+           -X POST \
+           -H "accept: application/json" \
+           -H "content-type: application/json" \
+           -d "{\"tag_name\": \"$DRONE_TAG\", \"target_commitish\": \"$DRONE_COMMIT_SHA\"}" \
+           $RELEASES_URL
+      - |
+        curl -H "Authorization: token $PACKAGE_UPLOAD_TOKEN" \
+           -H  "accept: application/json" \
+           -H  "Content-Type: multipart/form-data" \
+           --upload-file "attachment=@/_cache/bin/$PACKAGE_BASENAME" \
+           "$RELEASES_URL/$DRONE_TAG/assets?name=$PACKAGE_BASENAME"
+
 
 # FIXME: handle multi-arch
 # FIXME: publish only on tags
