@@ -43,6 +43,7 @@ steps:
            --upload-file "/_cache/bin/$PACKAGE_BASENAME" \
            "$PACKAGE_UPLOAD_URL/$DRONE_TAG/$PACKAGE_BASENAME"
       - |
+        set -x
         curl -H "Authorization: token $PACKAGE_UPLOAD_TOKEN" \
            -X POST \
            -H "accept: application/json" \
@@ -50,6 +51,7 @@ steps:
            -d "{\"tag_name\": \"$DRONE_TAG\", \"target_commitish\": \"$DRONE_COMMIT_SHA\"}" \
            $RELEASES_URL
       - |
+        set -x
         curl -H "Authorization: token $PACKAGE_UPLOAD_TOKEN" \
            -H "accept: application/json" \
            -H "Content-Type: multipart/form-data" \
