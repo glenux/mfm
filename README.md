@@ -1,19 +1,19 @@
 # Minimalist Fuse Manager (MFM)
 
-MFM is a Crystal-lang CLI tailored to simplify the management of encrypted vaults using multiple FUSE filesystems such as sshfs, gocryptfs, httpdirfs, and more. It provides a user-friendly interface, enabling users to smoothly mount and unmount filesystems, obtain filesystem status, and handle errors adeptly.
+MFM is a Crystal-lang CLI designed to streamline the management of various FUSE filesystems, such as sshfs, gocryptfs, httpdirfs, and more. Through its user-friendly interface, users can effortlessly mount and unmount filesystems, get real-time filesystem status, and handle errors proficiently.
 
 ## Prerequisites & Dependencies
 
-Before using MFM, ensure the following tools are installed on your system:
+Before using MFM, make sure the following tools are installed on your system:
 
 - **gocryptfs**: <https://github.com/rfjakob/gocryptfs>
 - **sshfs**: <https://github.com/libfuse/sshfs>
 - **httpdirfs**: <https://github.com/fangfufu/httpdirfs>
 - **fzf**: <https://github.com/junegunn/fzf>
 
-To build from source, you'll also require:
+To build from source, you'll also need:
 
-- **crystal-lang** : <https://crystal-lang.org/>
+- **crystal-lang**: <https://crystal-lang.org/>
 
 ## Installation
 
@@ -21,14 +21,13 @@ To build from source, you'll also require:
 
 1. Clone or download the source code.
 2. Navigate to the source directory.
-3. Execute `shards install` to obtain dependencies.
+3. Run `shards install` to fetch dependencies.
 4. Compile using `shards build`.
-5. Find the compiled binary in the `bin` directory.
+5. The compiled binary will be in the `bin` directory.
 
 ### 2. Binary Download
 
-You can also fetch a pre-compiled binary version of MFM.
-
+Alternatively, download a pre-compiled binary version of MFM.
 
 ## Usage
 
@@ -38,22 +37,22 @@ You can also fetch a pre-compiled binary version of MFM.
 Usage: mfm [options]
 
 Global options:
-    -c, --config FILE                Define configuration file
-    -h, --help                       Showcase this help
+    -c, --config FILE                Specify configuration file
+    -h, --help                       Display this help
 
 Commands:
-    create                           Instantiate a new vault
-    delete                           Erase an existing vault
-    edit                             Adjust the configuration
+    create                           Add a new filesystem
+    delete                           Remove an existing filesystem
+    edit                             Modify the configuration
 ```
 
 ### Demo
 
-<video src="https://code.apps.glenux.net/glenux/mfm/raw/branch/develop/doc/output.webm" width="810" height="595" style="max-width: 100%;" controls="controls"></video>
+<video src="https://code.apps.glenux.net/glenux/mfm/media/branch/develop/doc/output.webm" width="810" height="595" style="max-width: 100%;" controls="controls"></video>
 
 ## Configuration
 
-The script harnesses a YAML configuration file, typically located at `~/.config/mfm.yml`, which outlines vault names and paths.
+MFM uses a YAML configuration file, typically found at `~/.config/mfm.yml`, to detail the filesystem names, types, and respective configurations.
 
 ### YAML File Format
 
@@ -78,24 +77,23 @@ filesystems:
   - type: httpdirfs
     name: "Debian Repository"
     url: "http://ftp.debian.org/debian/"
-
   
-  # Incorporate more vaults as necessary
+  # Add more filesystems as needed
 ```
 
 ## Contribution Guidelines
 
-To contribute to MFM:
+Contributing to MFM:
 
-1. **Fork the Repository**: Begin by forking the MFM repository.
-2. **Create a Feature Branch**: Every feature or fix should reside in distinct branches.
-3. **Commit Changes**: Commit with expressive messages.
-4. **Run Tests**: Confirm no functional disruptions.
-5. **Push to Your Fork**: Transfer changes to your GitHub fork.
-6. **Submit a Pull Request**: Commence a pull request to the main repo, elaborating on your changes.
-7. **Review**: Anticipate feedback from maintainers and react suitably.
+1. **Fork the Repository**: Start by forking MFM's repository.
+2. **Create a Feature Branch**: Develop each feature or fix in its own branch.
+3. **Commit Changes**: Provide clear and informative commit messages.
+4. **Run Tests**: Ensure that all features are operational.
+5. **Push to Your Fork**: Push your changes to your fork on GitHub.
+6. **Submit a Pull Request**: Begin a pull request to the main repository and explain your changes.
+7. **Review**: Await feedback from the maintainers and respond as necessary.
 
-Contributors are bound by our code of conduct and the terms of the GPL-2 license.
+By contributing, you agree to our code of conduct and GPL-2 license terms.
 
 ## Authors and Contributors
 
@@ -103,9 +101,10 @@ Contributors are bound by our code of conduct and the terms of the GPL-2 license
 
 ## Inspired By
 
-- **Qasim**: A user-convenient FUSE manager. <https://code.apps.glenux.net/glenux/qasim>
-- **Sirikali**: A Qt/C++ GUI front end for various FUSE filesystems like cryfs, gocryptfs, securefs, ecryptfs, and encfs. <https://mhogomchungu.github.io/sirikali/>
+- **Qasim**: A user-friendly FUSE manager. <https://code.apps.glenux.net/glenux/qasim>
+- **Sirikali**: A Qt/C++ GUI front-end for various FUSE filesystems like cryfs, gocryptfs, securefs, ecryptfs, and encfs. <https://mhogomchungu.github.io/sirikali/>
 
 ## License
 
 GNU GPL-2
+
