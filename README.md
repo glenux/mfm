@@ -36,7 +36,7 @@ To build from source, you'll also need:
 
 ### 2. Binary Download
 
-Alternatively, download a pre-compiled binary version of MFM.
+Alternatively, download [a pre-compiled binary version](https://code.apps.glenux.net/glenux/mfm/releases) of MFM.
 
 ## Usage
 
