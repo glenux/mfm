@@ -51,9 +51,9 @@ steps:
            $RELEASES_URL
       - |
         curl -H "Authorization: token $PACKAGE_UPLOAD_TOKEN" \
-           -H  "accept: application/json" \
-           -H  "Content-Type: multipart/form-data" \
-           --upload-file "attachment=@/_cache/bin/$PACKAGE_BASENAME" \
+           -H "accept: application/json" \
+           -H "Content-Type: multipart/form-data" \
+           -F "attachment=@/_cache/bin/$PACKAGE_BASENAME" \
            "$RELEASES_URL/$DRONE_TAG/assets?name=$PACKAGE_BASENAME"
 
 
