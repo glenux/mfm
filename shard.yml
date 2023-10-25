@@ -1,4 +1,9 @@
 ---
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# SPDX-FileCopyrightText: 2023 Glenn Y. Rolland <glenux@glenux.net>
+# Copyright © 2023 Glenn Y. Rolland <glenux@glenux.net>
+
 name: Minimalist FUSE Manager
 version: 0.1.0
 
@@ -25,4 +30,4 @@ dependencies:
 #   webmock:
 #     github: manastech/webmock.cr
 
-# license: MIT
+license: GPL-3

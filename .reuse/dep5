@@ -1,0 +1,12 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0
+Upstream-Name: Minimalist FUSE Manager (MFM)
+Upstream-Contact: Glenn Y. Rolland <glenux@glenux.net>
+Source: https://code.apps.glenux.net/glenux/mfm/
+
+Files: shard.lock
+Copyright: 2023 Glenn Y. Rolland <glenux@glenux.net>
+License: GPL-3.0-or-later
+
+Files: doc/output.*
+Copyright: 2023 Glenn Y. Rolland <glenux@glenux.net>
+License: GPL-3.0-or-later
