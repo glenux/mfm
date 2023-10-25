@@ -49,7 +49,7 @@ Global options:
     -c, --config FILE                Specify configuration file
     -h, --help                       Display this help
 
-Commands:
+Commands (not implemented yet):
     create                           Add a new filesystem
     delete                           Remove an existing filesystem
     edit                             Modify the configuration
