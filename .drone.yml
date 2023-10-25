@@ -47,7 +47,7 @@ steps:
       - |
         set -x
         curl -X POST \
-          -H 'Authorization: token $RELEASE_UPLOAD_TOKEN' \
+          -H "Authorization: token $RELEASE_UPLOAD_TOKEN" \
           -H 'accept: application/json' \
           -H 'Content-Type: application/json' \
           -d "{\"body\": \"DRAFT\", \"draft\": true, \"name\": \"$DRONE_TAG - DRAFT\", \"prerelease\": false, \"tag_name\": \"$DRONE_TAG\",  \"target_commitish\": \"$DRONE_COMMIT_SHA\"}" \
