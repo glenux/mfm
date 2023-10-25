@@ -22,7 +22,7 @@ steps:
       - cp -r bin/mfm /_cache/bin/$PACKAGE_BASENAME
 
   - name: publish:tag
-    image: curlimages/curl
+    image: alpine
     environment:
       PACKAGE_UPLOAD_URL: https://code.apps.glenux.net/api/v1/packages/glenux/generic/mfm
       RELEASES_URL: https://code.apps.glenux.net/api/v1/repos/glenux/mfm/releases
@@ -39,6 +39,7 @@ steps:
       - name: cache
         path: /_cache
     commands:
+      - apk add --update --no-cache curl jq
       - env |grep DRONE
       - |
         curl -H "Authorization: token $PACKAGE_UPLOAD_TOKEN" \
@@ -53,13 +54,22 @@ steps:
           -d "{\"body\": \"DRAFT\", \"draft\": true, \"name\": \"$DRONE_TAG - DRAFT\", \"prerelease\": false, \"tag_name\": \"$DRONE_TAG\",  \"target_commitish\": \"$DRONE_COMMIT_SHA\"}" \
           "$RELEASES_URL"
       - |
+        curl -X 'GET' \
+          -H 'accept: application/json' \
+          "$RELEASES_URL/tags/$DRONE_TAG"
+      - |
+        TAG_ID="$(curl -X 'GET' \
+          -H 'accept: application/json' \
+          "$RELEASES_URL/tags/$DRONE_TAG" | jq -r .id)"
+        echo "TAG_ID=$TAG_ID"
+      - |
         set -x
         curl -X POST \
            -H "Authorization: token $RELEASE_UPLOAD_TOKEN" \
            -H "accept: application/json" \
            -H "Content-Type: multipart/form-data" \
            -F "attachment=@/_cache/bin/$PACKAGE_BASENAME" \
-           "$RELEASES_URL/$DRONE_TAG/assets?name=$PACKAGE_BASENAME"
+           "$RELEASES_URL/$TAG_ID/assets?name=$PACKAGE_BASENAME"
 
 
 # FIXME: handle multi-arch
