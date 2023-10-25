@@ -102,7 +102,7 @@ Contributing to MFM:
 6. **Submit a Pull Request**: Begin a pull request to the main repository and explain your changes.
 7. **Review**: Await feedback from the maintainers and respond as necessary.
 
-By contributing, you agree to our code of conduct and GPL-2 license terms.
+By contributing, you agree to our code of conduct and license terms.
 
 ## Authors and Contributors
 
