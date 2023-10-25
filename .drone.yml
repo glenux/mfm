@@ -11,7 +11,7 @@ steps:
         path: /_cache
     commands:
       - pwd
-      - apt-get update && apt-get install -y cmake g++
+      - apt-get update && apt-get install -y cmake g++ libevent-dev
       - shards install
       - shards build --production --static
       - strip bin/docmachine
