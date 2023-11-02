@@ -8,9 +8,11 @@ require "./filesystems"
 module GX
   class Config
     enum Mode
-      Add
-      Edit
-      Run
+      ConfigAdd
+      ConfigDelete
+      ConfigEdit
+      ShowVersion
+      Mount
     end
 
     record NoArgs
@@ -19,6 +21,7 @@ module GX
 
     getter filesystems : Array(Filesystem)
     getter home_dir : String
+    property verbose : Bool
     property mode : Mode
     property path : String
     property args : AddArgs.class | DelArgs.class | NoArgs.class
@@ -31,7 +34,8 @@ module GX
       end
       @home_dir = ENV["HOME"]
 
-      @mode = Mode::Run
+      @verbose = false
+      @mode = Mode::Mount
       @filesystems = [] of Filesystem
       @path = File.join(@home_dir, ".config", DEFAULT_CONFIG_PATH)
       @args = NoArgs

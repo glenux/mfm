@@ -8,6 +8,8 @@ require "./config"
 require "./fzf"
 
 module GX
+  VERSION="v0.1.9"
+
   class Cli
 
     @config : Config
@@ -29,39 +31,53 @@ module GX
         parser.on("-c", "--config FILE", "Set configuration file") do |path|
           @config.path = path
         end
+
+        parser.on("-v", "--verbose", "Set more verbosity") do |flag|
+          @config.verbose = true
+        end
+
+        parser.on("--version", "Show version") do |flag|
+          @config.mode = Config::Mode::ShowVersion
+        end
+
         parser.on("-h", "--help", "Show this help") do |flag|
           STDOUT.puts parser
           exit(0)
         end
 
         parser.separator("\nCommands")
-        parser.on("create", "Create vault") do 
-          @config.mode = Config::Mode::Add
+        parser.on("config", "Manage configuration") do 
+          parser.banner = "Usage: #{PROGRAM_NAME} config [commands] [options]\n\nGlobal options"
+          parser.separator("\nCommands")
 
-          parser.banner = "Usage: #{PROGRAM_NAME} create [options]\n\nGlobal options"
-          parser.separator("\nCommand options")
+          parser.on("create", "Create vault") do 
+            @config.mode = Config::Mode::ConfigAdd
 
-          parser.on("-n", "--name", "Set vault name") do |name|
-            add_args = add_args.merge({ name: name })
+            parser.banner = "Usage: #{PROGRAM_NAME} config create [commands] [options]\n\nGlobal options"
+            parser.separator("\nCommand options")
+
+            parser.on("-n", "--name", "Set vault name") do |name|
+              add_args = add_args.merge({ name: name })
+            end
+            parser.on("-p", "--path", "Set vault encrypted path") do |path|
+              add_args = add_args.merge({ path: path })
+            end
           end
-          parser.on("-p", "--path", "Set vault encrypted path") do |path|
-            add_args = add_args.merge({ path: path })
+
+          parser.on("delete", "Delete vault") do 
+            @config.mode = Config::Mode::ConfigAdd
+
+            parser.banner = "Usage: #{PROGRAM_NAME} delete [options]\n\nGlobal options"
+            parser.separator("\nCommand options")
+
+            parser.on("-n", "--name", "Set vault name") do |name|
+              delete_args = delete_args.merge({ name: name })
+            end
           end
-        end
 
-        parser.on("delete", "Delete vault") do 
-          @config.mode = Config::Mode::Add
-
-          parser.banner = "Usage: #{PROGRAM_NAME} delete [options]\n\nGlobal options"
-          parser.separator("\nCommand options")
-
-          parser.on("-n", "--name", "Set vault name") do |name|
-            delete_args = delete_args.merge({ name: name })
+          parser.on("edit", "Edit configuration") do |flag|
+            @config.mode = Config::Mode::ConfigEdit
           end
-        end
-
-        parser.on("edit", "Edit configuration") do |flag|
-          @config.mode = Config::Mode::Edit
         end
 
       end
@@ -71,21 +87,28 @@ module GX
     def run()
       @config.load_from_file
 
+      case @config.mode 
+      when Config::Mode::ShowVersion
+        STDOUT.puts "#{PROGRAM_NAME} #{VERSION}"
+      when Config::Mode::Mount
+        mount
+      end
+    end
+
+    def mount()
       names_display = {} of String => NamedTuple(filesystem: Filesystem, ansi_name: String)
       @config.filesystems.each do |filesystem|
         fs_str = filesystem.type.ljust(12,' ')
-        result_name = 
-          if filesystem.mounted? 
-            "#{fs_str} #{filesystem.name} [open]"
-          else
-            "#{fs_str} #{filesystem.name}"
-          end
-        ansi_name = 
-          if filesystem.mounted? 
-            "#{fs_str.colorize(:dark_gray)} #{filesystem.name} [#{ "open".colorize(:green) }]"
-          else
-            "#{fs_str.colorize(:dark_gray)} #{filesystem.name}"
-          end
+
+        suffix = ""
+        suffix_ansi = ""
+        if filesystem.mounted? 
+          suffix = "[open]"
+          suffix_ansi = "[#{ "open".colorize(:green) }]"
+        end
+
+        result_name = "#{fs_str} #{filesystem.name} #{suffix}".strip
+        ansi_name = "#{fs_str.colorize(:dark_gray)} #{filesystem.name} #{suffix_ansi}".strip
 
         names_display[result_name] = {
           filesystem: filesystem,
@@ -93,7 +116,7 @@ module GX
         }
       end
 
-      result_filesystem_name = Fzf.run(names_display.values.map(&.[:ansi_name]).sort)
+      result_filesystem_name = Fzf.run(names_display.values.map(&.[:ansi_name]).sort).strip
       selected_filesystem = names_display[result_filesystem_name][:filesystem]
       puts ">> #{selected_filesystem.name}".colorize(:yellow)
 
