@@ -12,6 +12,7 @@ module GX
     getter remote_path : String = ""
     getter remote_user : String = ""
     getter remote_host : String = ""
+    getter remote_port : String = "22"
 
     @[YAML::Field(key: "mount_dir", ignore: true)]
     getter mount_dir : String = ""
@@ -34,7 +35,11 @@ module GX
         error = STDERR
         process = Process.new(
           "sshfs", 
-          ["#{remote_user}@#{remote_host}:#{remote_path}", mount_dir], 
+          [
+            "-p", remote_port,
+            "#{remote_user}@#{remote_host}:#{remote_path}", 
+            mount_dir
+          ], 
           input: input, 
           output: output, 
           error: error
