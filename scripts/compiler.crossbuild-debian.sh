@@ -3,7 +3,7 @@
 
 LOCAL_PROJECT_PATH="${1-$PWD}"
 
-TARGET_ARCH="${2-amd64}"
+TARGET_ARCH="${2-arm64}"
 
 DOCKER_IMAGE=""
 
@@ -15,31 +15,34 @@ BUILD_COMMAND=" \
 
 # crystal
 INSTALL_CRYSTAL=" \
-  sed -i -e 's/Types: deb/Types: deb deb-src/' /etc/apt/sources.list.d/debian.sources \
-  && echo 'deb http://deb.debian.org/debian unstable main' > /etc/apt/sources.list.d/sid.list \
-  && echo 'deb-src http://deb.debian.org/debian unstable main' >> /etc/apt/sources.list.d/sid.list \
-  && apt-get update \
+  sed -i -e '/^deb/d' /etc/apt/sources.list \
+  && sed -i -e '/jessie.updates/d' /etc/apt/sources.list \
+  && sed -i -e 's/^# deb/deb/' /etc/apt/sources.list \
+  && apt-get update"
+
+cat > /dev/null <<EOF
+"
   && apt-get install -y \
-    g++ \
+    g\+\+ \
+    gcc \
+    curl \
+    autoconf \
+    automake \
+    python2 \
     libxml2-dev \
     llvm-dev \
     make \
     libssl-dev \
-    libpcre3-dev \
+    libpcre2-dev \
     libyaml-dev \
     zlib1g-dev \
-    dpkg-dev \
-    debuild \
-  && apt source crystal \
-  && apt build-dep crystal \
-  && ls -lF \
-  && debuild -b -uc -us \
 "
+EOF
 
 # setup arch
 case "$TARGET_ARCH" in
-  amd64) DOCKER_IMAGE="debian" ;;
-  arm64) DOCKER_IMAGE="arm64v8/debian" ;;
+  amd64) DOCKER_IMAGE="debian:8" ;;
+  arm64) DOCKER_IMAGE="arm64v8/debian:8" ;;
   armel) DOCKER_IMAGE="arm32v7/debian" ;;
   armhf) DOCKER_IMAGE="armhf/debian" ;;
   i386)  DOCKER_IMAGE="x86/debian" ;;
@@ -66,7 +69,8 @@ docker run \
   -w /app \
   --rm \
   --platform linux/arm64 \
-  "$DOCKER_IMAGE"
+  "$DOCKER_IMAGE" \
+  /bin/sh -c "$INSTALL_CRYSTAL && bash"
 
 exit 0
 
