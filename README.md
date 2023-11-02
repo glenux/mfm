@@ -19,10 +19,26 @@ Before using MFM, make sure the following tools are installed on your system:
 - **sshfs**: <https://github.com/libfuse/sshfs>
 - **httpdirfs**: <https://github.com/fangfufu/httpdirfs>
 - **fzf**: <https://github.com/junegunn/fzf>
+- libpcre3
+- libevent-2.1
+
+For Debian/Ubuntu you can use the following command:
+
+```shell-session
+$ sudo apt-get update && sudo apt-get install libpcre3 libevent-2.1-7 fzf gocryptfs httpdirfs sshfs
+```
+
+## Building from source
 
 To build from source, you'll also need:
 
 - **crystal-lang**: <https://crystal-lang.org/>
+
+For Debian/Ubuntu you can use the following command:
+
+```shell-session
+$ sudo apt-get update && sudo apt-get install libpcre3-dev libevent-2.1-dev
+```
 
 ## Installation
 
@@ -36,7 +52,8 @@ To build from source, you'll also need:
 
 ### 2. Binary Download
 
-Alternatively, download [a pre-compiled binary version](https://code.apps.glenux.net/glenux/mfm/releases) of MFM.
+Alternatively, download [a pre-compiled binary
+version](https://code.apps.glenux.net/glenux/mfm/releases) of MFM.
 
 ## Usage
 
@@ -61,7 +78,8 @@ Commands (not implemented yet):
 
 ## Configuration
 
-MFM uses a YAML configuration file, typically found at `~/.config/mfm.yml`, to detail the filesystem names, types, and respective configurations.
+MFM uses a YAML configuration file, typically found at `~/.config/mfm.yml`, to
+detail the filesystem names, types, and respective configurations.
 
 ### YAML File Format
 
@@ -86,7 +104,7 @@ filesystems:
   - type: httpdirfs
     name: "Debian Repository"
     url: "http://ftp.debian.org/debian/"
-  
+
   # Add more filesystems as needed
 ```
 
