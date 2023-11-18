@@ -5,7 +5,7 @@
 # Copyright © 2023 Glenn Y. Rolland <glenux@glenux.net>
 
 name: Minimalist FUSE Manager
-version: 0.1.0
+version: 0.1.10
 
 targets:
   mfm:
@@ -22,6 +22,8 @@ dependencies:
     github: straight-shoota/crinja
   shellwords:
     github: szTheory/shellwords-crystal
+  version_from_shard:
+    github: hugopl/version_from_shard
 
 # dependencies:
 #   pg:
