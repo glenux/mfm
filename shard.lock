@@ -1,5 +1,8 @@
 version: 2.0
 shards:
+  crinja:
+    git: https://github.com/straight-shoota/crinja.git
+    version: 0.8.1
   shellwords:
     git: https://github.com/sztheory/shellwords-crystal.git
     version: 0.1.0

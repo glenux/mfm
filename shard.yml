@@ -18,6 +18,8 @@ targets:
 #   Short description of gx-vault
 
 dependencies:
+  crinja:
+    github: straight-shoota/crinja
   shellwords:
     github: szTheory/shellwords-crystal
 
