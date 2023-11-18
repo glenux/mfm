@@ -5,7 +5,7 @@
 # Copyright © 2023 Glenn Y. Rolland <glenux@glenux.net>
 
 name: Minimalist FUSE Manager
-version: 0.1.10
+version: 0.1.11
 
 targets:
   mfm:
