@@ -6,10 +6,9 @@
 require "option_parser"
 require "./config"
 require "./fzf"
+require "./version"
 
 module GX
-  VERSION="v0.1.9"
-
   class Cli
     Log = ::Log.for("cli")
 
