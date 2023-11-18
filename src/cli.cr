@@ -11,6 +11,7 @@ module GX
   VERSION="v0.1.9"
 
   class Cli
+    Log = ::Log.for("cli")
 
     @config : Config
 
@@ -29,10 +30,12 @@ module GX
         parser.banner = "Usage: #{PROGRAM_NAME} [options]\n\nGlobal options"
 
         parser.on("-c", "--config FILE", "Set configuration file") do |path|
+          Log.info { "Configuration set to #{path}" }
           @config.path = path
         end
 
         parser.on("-v", "--verbose", "Set more verbosity") do |flag|
+          Log.info { "Verbosity enabled" }
           @config.verbose = true
         end
 

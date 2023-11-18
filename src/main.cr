@@ -6,10 +6,32 @@
 require "yaml"
 require "colorize"
 require "json"
+require "log"
 
 require "./filesystems/gocryptfs"
 require "./config"
 require "./cli"
+
+struct BaseFormat < Log::StaticFormatter
+  def run
+    string @entry.severity.label.downcase
+    string "("
+    source
+    string "): "
+    message
+  end
+end
+
+Log.setup do |config|
+  backend = Log::IOBackend.new(formatter: BaseFormat)
+  config.bind "*", Log::Severity::Info, backend
+
+  if ENV["LOG_LEVEL"]?
+    level = Log::Severity.parse(ENV["LOG_LEVEL"]) || Log::Severity::Info
+    config.bind "*", level, backend
+  end
+end
+
 
 app = GX::Cli.new
 app.parse_command_line(ARGV)
