@@ -25,7 +25,7 @@ module GX
     getter home_dir : String
     property verbose : Bool
     property mode : Mode
-    property path : String
+    property path : String?
     property args : AddArgs.class | DelArgs.class | NoArgs.class
 
     def initialize()
@@ -37,7 +37,7 @@ module GX
       @verbose = false
       @mode = Mode::Mount
       @filesystems = [] of Filesystem
-      @path = detect_config_file()
+      @path = nil
 
       @args = NoArgs
     end
@@ -66,13 +66,18 @@ module GX
     end
 
     def load_from_file
+      path = @path
+      if path.nil?
+        path = detect_config_file()
+      end
+      @path = path
       @filesystems = [] of Filesystem
 
-      if !File.exists? @path
-        Log.error { "File #{@path} does not exist!".colorize(:red) }
+      if !File.exists? path
+        Log.error { "File #{path} does not exist!".colorize(:red) }
         exit(1)
       end
-      load_filesystems(@path)
+      load_filesystems(path)
     end
 
     private def load_filesystems(config_path : String)
