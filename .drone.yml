@@ -5,7 +5,7 @@ name: default
 
 steps:
   - name: build:binary
-    image: crystallang/crystal:1.10.1
+    image: crystallang/crystal:1.10.1-alpine
     environment:
       PACKAGE_BASENAME: mfm_linux_amd64
     volumes:
@@ -13,12 +13,12 @@ steps:
         path: /_cache
     commands:
       - pwd
-      - |
-        apt-get update && \
-        apt-get install -y \
-          cmake g++ \
-          libevent-dev libpcre3-dev \
-          libyaml-dev liblzma-dev
+        # - |
+        #   apt-get update && \
+        #   apt-get install -y \
+        #     cmake g++ \
+        #     libevent-dev libpcre3-dev \
+        #     libyaml-dev liblzma-dev
       - shards install
       - shards build --production --static
       - strip bin/mfm
