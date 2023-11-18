@@ -8,6 +8,7 @@ require "colorize"
 require "json"
 
 require "./filesystems/gocryptfs"
+require "./file_storage"
 require "./config"
 require "./cli"
 

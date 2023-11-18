@@ -1,0 +1,5 @@
+---
+fr:
+  cli:
+    banner: "Usage: %{program_name} [options]\n\nOptions globales"
+#

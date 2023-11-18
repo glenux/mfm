@@ -1,6 +1,18 @@
+---
 version: 2.0
 shards:
+  baked_file_system:
+    git: https://github.com/schovi/baked_file_system.git
+    version: 0.10.0
+
+  crinja:
+    git: https://github.com/straight-shoota/crinja.git
+    version: 0.8.1
+
+  i18n:
+    git: https://github.com/crystal-i18n/i18n.git
+    version: 0.2.1
+
   shellwords:
     git: https://github.com/sztheory/shellwords-crystal.git
     version: 0.1.0
-

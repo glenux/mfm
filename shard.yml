@@ -20,6 +20,13 @@ targets:
 dependencies:
   shellwords:
     github: szTheory/shellwords-crystal
+    version: 0.1.0
+  baked_file_system:
+    github: schovi/baked_file_system
+    version: 0.10.0
+  i18n:
+    github: crystal-i18n/i18n
+    version: 0.2.1
 
 # dependencies:
 #   pg:

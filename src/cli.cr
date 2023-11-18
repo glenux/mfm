@@ -3,6 +3,7 @@
 # SPDX-FileCopyrightText: 2023 Glenn Y. Rolland <glenux@glenux.net>
 # Copyright © 2023 Glenn Y. Rolland <glenux@glenux.net>
 
+require "i18n"
 require "option_parser"
 require "./config"
 require "./fzf"
@@ -16,6 +17,10 @@ module GX
 
     def initialize()
       # Main execution starts here
+      I18n.config.loaders << I18n::Loader::YAML.embed("data/locales")
+      I18n.config.default_locale = :en
+      I18n.activate(:fr) ## FIXME: load from environment
+      I18n.init
       @config = Config.new
 
       ## FIXME: check that FZF is installed
@@ -26,7 +31,7 @@ module GX
       add_args = { name: "", path: "" }
       delete_args = { name: "" }
       pparser = OptionParser.new do |parser|
-        parser.banner = "Usage: #{PROGRAM_NAME} [options]\n\nGlobal options"
+        parser.banner = I18n.t("cli.banner", program_name: PROGRAM_NAME)
 
         parser.on("-c", "--config FILE", "Set configuration file") do |path|
           @config.path = path
