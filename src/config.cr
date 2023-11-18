@@ -3,6 +3,8 @@
 # SPDX-FileCopyrightText: 2023 Glenn Y. Rolland <glenux@glenux.net>
 # Copyright © 2023 Glenn Y. Rolland <glenux@glenux.net>
 
+require "crinja"
+
 require "./filesystems"
 
 module GX
@@ -81,7 +83,11 @@ module GX
     end
 
     private def load_filesystems(config_path : String)
-      yaml_data = YAML.parse(File.read(config_path))
+      file_data = File.read(config_path)
+      # FIXME: render template on a value basis (instead of global)
+      file_patched = Crinja.render(file_data, {"env" => ENV.to_h}) 
+
+      yaml_data = YAML.parse(file_patched)
       vaults_data = yaml_data["filesystems"].as_a
 
       vaults_data.each do |filesystem_data|
