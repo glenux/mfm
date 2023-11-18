@@ -5,7 +5,7 @@ name: default
 
 steps:
   - name: build:binary
-    image: crystallang/crystal:1.7.3
+    image: crystallang/crystal:1.10.1
     environment:
       PACKAGE_BASENAME: mfm_linux_amd64
     volumes:
