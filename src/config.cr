@@ -3,14 +3,20 @@
 # SPDX-FileCopyrightText: 2023 Glenn Y. Rolland <glenux@glenux.net>
 # Copyright © 2023 Glenn Y. Rolland <glenux@glenux.net>
 
+require "crinja"
+
 require "./filesystems"
 
 module GX
   class Config
+    Log = ::Log.for("config")
+
     enum Mode
-      Add
-      Edit
-      Run
+      ConfigAdd
+      ConfigDelete
+      ConfigEdit
+      ShowVersion
+      Mount
     end
 
     record NoArgs
@@ -19,11 +25,10 @@ module GX
 
     getter filesystems : Array(Filesystem)
     getter home_dir : String
+    property verbose : Bool
     property mode : Mode
-    property path : String
+    property path : String?
     property args : AddArgs.class | DelArgs.class | NoArgs.class
-
-    DEFAULT_CONFIG_PATH = "mfm.yml"
 
     def initialize()
       if !ENV["HOME"]?
@@ -31,24 +36,58 @@ module GX
       end
       @home_dir = ENV["HOME"]
 
-      @mode = Mode::Run
+      @verbose = false
+      @mode = Mode::Mount
       @filesystems = [] of Filesystem
-      @path = File.join(@home_dir, ".config", DEFAULT_CONFIG_PATH)
+      @path = nil
+
       @args = NoArgs
     end
 
+    def detect_config_file()
+      possible_files = [
+        File.join(@home_dir, ".config", "mfm", "config.yaml"),
+        File.join(@home_dir, ".config", "mfm", "config.yml"),
+        File.join(@home_dir, ".config", "mfm.yaml"),
+        File.join(@home_dir, ".config", "mfm.yml"),
+        File.join("/etc", "mfm", "config.yaml"),
+        File.join("/etc", "mfm", "config.yml"),
+      ]
+
+      possible_files.each do |file_path|
+        if File.exists?(file_path)
+          Log.info { "Configuration file found: #{file_path}" }
+          return file_path if File.exists?(file_path)
+        else
+          Log.debug { "Configuration file not found: #{file_path}" }
+        end
+      end
+
+      Log.error { "No configuration file found in any of the standard locations" }
+      raise "Configuration file not found"
+    end
+
     def load_from_file
+      path = @path
+      if path.nil?
+        path = detect_config_file()
+      end
+      @path = path
       @filesystems = [] of Filesystem
 
-      if !File.exists? @path
-        STDERR.puts "Error: file #{@path} does not exist!".colorize(:red)
+      if !File.exists? path
+        Log.error { "File #{path} does not exist!".colorize(:red) }
         exit(1)
       end
-      load_filesystems(@path)
+      load_filesystems(path)
     end
 
     private def load_filesystems(config_path : String)
-      yaml_data = YAML.parse(File.read(config_path))
+      file_data = File.read(config_path)
+      # FIXME: render template on a value basis (instead of global)
+      file_patched = Crinja.render(file_data, {"env" => ENV.to_h}) 
+
+      yaml_data = YAML.parse(file_patched)
       vaults_data = yaml_data["filesystems"].as_a
 
       vaults_data.each do |filesystem_data|

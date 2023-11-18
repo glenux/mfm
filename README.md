@@ -5,6 +5,8 @@
 # Copyright © 2023 Glenn Y. Rolland <glenux@glenux.net>
 -->
 
+[![Build Status](https://cicd.apps.glenux.net/api/badges/glenux/mfm/status.svg)](https://cicd.apps.glenux.net/glenux/mfm)
+
 # Minimalist Fuse Manager (MFM)
 
 MFM is a Crystal-lang CLI designed to streamline the management of various FUSE filesystems, such as sshfs, gocryptfs, httpdirfs, and more. Through its user-friendly interface, users can effortlessly mount and unmount filesystems, get real-time filesystem status, and handle errors proficiently.
@@ -17,10 +19,26 @@ Before using MFM, make sure the following tools are installed on your system:
 - **sshfs**: <https://github.com/libfuse/sshfs>
 - **httpdirfs**: <https://github.com/fangfufu/httpdirfs>
 - **fzf**: <https://github.com/junegunn/fzf>
+- libpcre3
+- libevent-2.1
+
+For Debian/Ubuntu you can use the following command:
+
+```shell-session
+$ sudo apt-get update && sudo apt-get install libpcre3 libevent-2.1-7 fzf gocryptfs httpdirfs sshfs
+```
+
+## Building from source
 
 To build from source, you'll also need:
 
 - **crystal-lang**: <https://crystal-lang.org/>
+
+For Debian/Ubuntu you can use the following command:
+
+```shell-session
+$ sudo apt-get update && sudo apt-get install libpcre3-dev libevent-2.1-dev
+```
 
 ## Installation
 
@@ -34,7 +52,8 @@ To build from source, you'll also need:
 
 ### 2. Binary Download
 
-Alternatively, download a pre-compiled binary version of MFM.
+Alternatively, download [a pre-compiled binary
+version](https://code.apps.glenux.net/glenux/mfm/releases) of MFM.
 
 ## Usage
 
@@ -47,7 +66,7 @@ Global options:
     -c, --config FILE                Specify configuration file
     -h, --help                       Display this help
 
-Commands:
+Commands (not implemented yet):
     create                           Add a new filesystem
     delete                           Remove an existing filesystem
     edit                             Modify the configuration
@@ -59,7 +78,8 @@ Commands:
 
 ## Configuration
 
-MFM uses a YAML configuration file, typically found at `~/.config/mfm.yml`, to detail the filesystem names, types, and respective configurations.
+MFM uses a YAML configuration file, typically found at `~/.config/mfm.yml`, to
+detail the filesystem names, types, and respective configurations.
 
 ### YAML File Format
 
@@ -84,7 +104,7 @@ filesystems:
   - type: httpdirfs
     name: "Debian Repository"
     url: "http://ftp.debian.org/debian/"
-  
+
   # Add more filesystems as needed
 ```
 
@@ -100,7 +120,7 @@ Contributing to MFM:
 6. **Submit a Pull Request**: Begin a pull request to the main repository and explain your changes.
 7. **Review**: Await feedback from the maintainers and respond as necessary.
 
-By contributing, you agree to our code of conduct and GPL-2 license terms.
+By contributing, you agree to our code of conduct and license terms.
 
 ## Authors and Contributors
 
