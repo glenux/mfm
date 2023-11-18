@@ -88,12 +88,11 @@ module GX
     end
 
     def run()
-      @config.load_from_file
-
       case @config.mode 
       when Config::Mode::ShowVersion
         STDOUT.puts "#{PROGRAM_NAME} #{VERSION}"
       when Config::Mode::Mount
+        @config.load_from_file
         mount
       end
     end
