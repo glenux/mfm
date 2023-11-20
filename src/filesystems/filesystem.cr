@@ -23,7 +23,7 @@ module GX
       system("fusermount -u #{mount_dir.shellescape}")
       fusermount_status = $?
 
-      if fusermount_status.success? == 0
+      if fusermount_status.success?
         puts "Filesystem #{name} is now closed.".colorize(:green)
       else
         puts "Error: Unable to unmount filesystem #{name} (exit code: #{fusermount_status.exit_code}).".colorize(:red)
