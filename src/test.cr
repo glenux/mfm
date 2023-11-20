@@ -47,13 +47,13 @@ tput.listen do |char, key, sequence|
   # were consumed as part of identifying the key that was
   # pressed.
   if char == 'q'
-    tput.normal_buffer
+    # tput.normal_buffer
     # tput.reset_cursor
     # tput.exit_alt_charset_mode
     # tput.attr("normal", 1)
     # tput.soft_reset
-    system("stty echo")
-    exit
+    # system("stty echo")
+    break
   else
     tput.cr
     tput.lf
@@ -61,3 +61,5 @@ tput.listen do |char, key, sequence|
   end
 end
 
+tput.normal_buffer
+# tput.clear
