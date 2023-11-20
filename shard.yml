@@ -8,6 +8,8 @@ name: Minimalist FUSE Manager
 version: 0.1.11
 
 targets:
+  test:
+    main: src/test.cr
   mfm:
     main: src/main.cr
 
@@ -24,6 +26,9 @@ dependencies:
     github: szTheory/shellwords-crystal
   version_from_shard:
     github: hugopl/version_from_shard
+  tput:
+    github: crystallabs/tput.cr
+    version: ~> 1.0
 
 # dependencies:
 #   pg:
