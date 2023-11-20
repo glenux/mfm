@@ -97,7 +97,7 @@ module GX
     end
 
     def mount()
-      names_display = {} of String => NamedTuple(filesystem: Filesystem, ansi_name: String)
+      names_display = {} of String => NamedTuple(filesystem: Filesystem::AbstractFilesystem, ansi_name: String)
       @config.filesystems.each do |filesystem|
         fs_str = filesystem.type.ljust(12,' ')
 

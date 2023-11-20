@@ -4,38 +4,39 @@
 # Copyright © 2023 Glenn Y. Rolland <glenux@glenux.net>
 
 require "shellwords"
-require "./filesystem"
+require "./abstract_filesystem"
 
 module GX
-  class SshFS < Filesystem
-    getter name : String = ""
-    getter remote_path : String = ""
-    getter remote_user : String = ""
-    getter remote_host : String = ""
-    getter remote_port : String = "22"
+  module Filesystem
+    class SshFS < AbstractFilesystem
+      getter name : String = ""
+      getter remote_path : String = ""
+      getter remote_user : String = ""
+      getter remote_host : String = ""
+      getter remote_port : String = "22"
 
-    @[YAML::Field(key: "mount_dir", ignore: true)]
-    getter mount_dir : String = ""
+      @[YAML::Field(key: "mount_dir", ignore: true)]
+      getter mount_dir : String = ""
 
-    include GenericFilesystem
+      include FilesystemBase
 
-    def after_initialize()
-      home_dir = ENV["HOME"] || raise "Home directory not found"
-      @mount_dir = File.join(home_dir, "mnt/#{@name}")
-    end
+      def after_initialize()
+        home_dir = ENV["HOME"] || raise "Home directory not found"
+        @mount_dir = File.join(home_dir, "mnt/#{@name}")
+      end
 
-    def mounted? : Bool
-      `mount`.includes?("#{remote_user}@#{remote_host}:#{remote_path} on #{mount_dir}")
-    end
+      def mounted? : Bool
+        `mount`.includes?("#{remote_user}@#{remote_host}:#{remote_path} on #{mount_dir}")
+      end
 
-    def mount
-      super do
-        input = STDIN
-        output = STDOUT
-        error = STDERR
-        process = Process.new(
-          "sshfs", 
-          [
+      def mount
+        super do
+          input = STDIN
+          output = STDOUT
+          error = STDERR
+          process = Process.new(
+            "sshfs", 
+            [
             "-p", remote_port,
             "#{remote_user}@#{remote_host}:#{remote_path}", 
             mount_dir
@@ -43,10 +44,11 @@ module GX
           input: input, 
           output: output, 
           error: error
-        )
-        unless process.wait.success?
-          puts "Error mounting the filesystem".colorize(:red)
-          return
+          )
+          unless process.wait.success?
+            puts "Error mounting the filesystem".colorize(:red)
+            return
+          end
         end
       end
     end

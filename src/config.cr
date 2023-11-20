@@ -23,7 +23,7 @@ module GX
     record AddArgs, name : String, path : String
     record DelArgs, name : String
 
-    getter filesystems : Array(Filesystem)
+    getter filesystems : Array(Filesystem::AbstractFilesystem)
     getter home_dir : String
     getter global_mount_point : String?
     property verbose : Bool
@@ -39,7 +39,7 @@ module GX
 
       @verbose = false
       @mode = Mode::Mount
-      @filesystems = [] of Filesystem
+      @filesystems = [] of Filesystem::AbstractFilesystem
       @path = nil
       @global_mount_point = nil
 
@@ -75,7 +75,7 @@ module GX
         path = detect_config_file()
       end
       @path = path
-      @filesystems = [] of Filesystem
+      @filesystems = [] of Filesystem::AbstractFilesystem
 
       if !File.exists? path
         Log.error { "File #{path} does not exist!".colorize(:red) }
@@ -111,7 +111,7 @@ module GX
         type = filesystem_data["type"].as_s
         name = filesystem_data["name"].as_s
         # encrypted_path = filesystem_data["encrypted_path"].as_s
-        @filesystems << Filesystem.from_yaml(filesystem_data.to_yaml)
+        @filesystems << Filesystem::AbstractFilesystem.from_yaml(filesystem_data.to_yaml)
         # @filesystems << Filesystem.new(name, encrypted_path, "#{name}.Open")
       end
     end

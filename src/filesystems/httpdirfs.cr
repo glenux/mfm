@@ -4,17 +4,18 @@
 # Copyright © 2023 Glenn Y. Rolland <glenux@glenux.net>
 
 require "shellwords"
-require "./filesystem"
+require "./abstract_filesystem"
 
 module GX
-  class HttpDirFS < Filesystem
+  module Filesystem
+  class HttpDirFS < AbstractFilesystem
     getter name : String = ""
     getter url : String = ""
 
     @[YAML::Field(key: "mount_dir", ignore: true)]
     getter mount_dir : String = ""
 
-    include GenericFilesystem
+    include FilesystemBase
 
     def after_initialize()
       home_dir = ENV["HOME"] || raise "Home directory not found"
@@ -43,6 +44,7 @@ module GX
         end
       end
     end
+  end
   end
 end
 
