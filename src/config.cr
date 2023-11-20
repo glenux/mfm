@@ -25,6 +25,7 @@ module GX
 
     getter filesystems : Array(Filesystem)
     getter home_dir : String
+    getter global_mount_point : String?
     property verbose : Bool
     property mode : Mode
     property path : String?
@@ -40,6 +41,7 @@ module GX
       @mode = Mode::Mount
       @filesystems = [] of Filesystem
       @path = nil
+      @global_mount_point = nil
 
       @args = NoArgs
     end
@@ -82,14 +84,29 @@ module GX
       load_filesystems(path)
     end
 
+    # FIXME: render template on a value basis (instead of global)
     private def load_filesystems(config_path : String)
+      schema_version = nil
       file_data = File.read(config_path)
-      # FIXME: render template on a value basis (instead of global)
       file_patched = Crinja.render(file_data, {"env" => ENV.to_h}) 
 
       yaml_data = YAML.parse(file_patched)
-      vaults_data = yaml_data["filesystems"].as_a
 
+      # Extract schema version
+      if yaml_data["version"]?
+          schema_version = yaml_data["version"].as_s?
+      end
+
+      # Extract global settings
+      if yaml_data["global"]?.try &.as_h?
+        global_data = yaml_data["global"]
+        if global_data["mountpoint"]?
+          @global_mount_point = global_data["mountpoint"].as_s?
+        end
+      end
+
+      # Extract filesystem data
+      vaults_data = yaml_data["filesystems"].as_a
       vaults_data.each do |filesystem_data|
         type = filesystem_data["type"].as_s
         name = filesystem_data["name"].as_s
