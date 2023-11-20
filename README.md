@@ -84,19 +84,19 @@ detail the filesystem names, types, and respective configurations.
 ### YAML File Format
 
 ```yaml
-version: "1"
-
-global:
-  mountpoint: "/home/user/mnt/{{name}}"
+# NOT IMPLEMENTED YET
+# version: "1"
+# global:
+#   mountpoint: "/home/user/mnt/{{filesystem.name}}"
 
 filesystems:
   - type: "gocryptfs"
     name: "Work - SSH Keys"
-    encrypted_path: "/home/user/.ssh/keyring.work"
+    encrypted_path: "/home/user/.ssh/keyring.work.vault"
 
   - type: "sshfs"
     name: "Personal - Media Server"
-    remote_user: "user"
+    remote_user: "{{env.USER}}"
     remote_host: "mediaserver.local"
     remote_path: "/mnt/largedisk/music"
     remote_port: 22
