@@ -21,7 +21,13 @@ module GX
   module GenericFilesystem
     def unmount
       system("fusermount -u #{mount_dir.shellescape}")
-      puts "Filesystem #{name} is now closed.".colorize(:green)
+      fusermount_status = $?
+
+      if fusermount_status.success? == 0
+        puts "Filesystem #{name} is now closed.".colorize(:green)
+      else
+        puts "Error: Unable to unmount filesystem #{name} (exit code: #{fusermount_status.exit_code}).".colorize(:red)
+      end
     end
 
     def mount(&block)
