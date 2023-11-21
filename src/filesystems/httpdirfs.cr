@@ -5,6 +5,7 @@
 
 require "shellwords"
 require "./abstract_filesystem"
+require "./concerns/base"
 
 module GX
   module Filesystem
@@ -15,28 +16,20 @@ module GX
     @[YAML::Field(key: "mount_dir", ignore: true)]
     getter mount_dir : String = ""
 
-    include FilesystemBase
+    include Concerns::Base
 
-    def after_initialize()
-      home_dir = ENV["HOME"] || raise "Home directory not found"
-      @mount_dir = File.join(home_dir, "mnt/#{@name}")
-    end
-
-    def mounted? : Bool
-      `mount`.includes?("httpdirfs on #{mount_dir}")
+    def mounted_prefix()
+      "httpdirfs"
     end
 
     def mount
-      super do
-        input = STDIN
-        output = STDOUT
-        error = STDERR
+      _mount_wrapper do 
         process = Process.new(
           "httpdirfs", 
           ["#{url}", mount_dir], 
-          input: input, 
-          output: output, 
-          error: error
+          input: STDIN, 
+          output: STDOUT, 
+          error: STDERR
         )
         unless process.wait.success?
           puts "Error mounting the filesystem".colorize(:red)

@@ -17,34 +17,11 @@ module GX
       }
 
       property type : String
-    end
 
-    module FilesystemBase
-      def unmount
-        system("fusermount -u #{mount_dir.shellescape}")
-        fusermount_status = $?
-
-        if fusermount_status.success?
-          puts "Filesystem #{name} is now closed.".colorize(:green)
-        else
-          puts "Error: Unable to unmount filesystem #{name} (exit code: #{fusermount_status.exit_code}).".colorize(:red)
-        end
-      end
-
-      def mount(&block)
-        Dir.mkdir_p(mount_dir) unless Dir.exists?(mount_dir)
-        if mounted?
-          puts "Already mounted. Skipping.".colorize(:yellow)
-          return
-        end
-
-        yield
-
-        puts "Filesystem #{name} is now available on #{mount_dir}".colorize(:green)
-      end
+      abstract def mount()
+      abstract def unmount()
+      abstract def mounted_prefix()
     end
   end
 end
 
-require "./gocryptfs"
-require "./sshfs"
