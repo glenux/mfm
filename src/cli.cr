@@ -92,13 +92,18 @@ module GX
         STDOUT.puts "#{PROGRAM_NAME} #{VERSION}"
       when Config::Mode::Mount
         @config.load_from_file
-        mount
+        filesystem = choose_filesystem
+        mount_or_umount(filesystem) if !filesystem.nil?
       end
     end
 
-    def mount()
-      names_display = {} of String => NamedTuple(filesystem: Filesystem::AbstractFilesystem, ansi_name: String)
-      @config.filesystems.each do |filesystem|
+    def choose_filesystem()
+      names_display = {} of String => NamedTuple(filesystem: Models::AbstractFilesystemConfig, ansi_name: String)
+
+      config_root = @config.root
+      return if config_root.nil?
+
+      config_root.filesystems.each do |filesystem|
         fs_str = filesystem.type.ljust(12,' ')
 
         suffix = ""
@@ -121,12 +126,22 @@ module GX
       selected_filesystem = names_display[result_filesystem_name][:filesystem]
       puts ">> #{selected_filesystem.name}".colorize(:yellow)
 
-      if selected_filesystem
-        selected_filesystem.mounted? ? selected_filesystem.unmount : selected_filesystem.mount
-      else
+      if !selected_filesystem
         STDERR.puts "Vault not found: #{selected_filesystem}.".colorize(:red)
+        return
       end
+      return selected_filesystem
+    end
 
+    def mount_or_umount(selected_filesystem)
+      config_root_safe = @config.root
+      return if config_root_safe.nil?
+
+      if !selected_filesystem.mounted?
+        selected_filesystem.mount()
+      else
+        selected_filesystem.umount()
+      end
     end
   end
 end
