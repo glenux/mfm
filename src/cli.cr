@@ -101,7 +101,7 @@ module GX
         raise Models::InvalidFilesystemError.new("Invalid filesystem") if filesystem.nil?
 
         mount_or_umount(filesystem)
-        auto_open(filesystem) if @config.auto_open
+        auto_open(filesystem) if filesystem.mounted? && @config.auto_open
       end
     end
 
