@@ -6,6 +6,12 @@
 require "yaml"
 
 module GX::Models
+  class InvalidFilesystemError < Exception
+  end
+
+  class InvalidMountpointError < Exception
+  end
+
   abstract class AbstractFilesystemConfig
     include YAML::Serializable
     # include YAML::Serializable::Strict
