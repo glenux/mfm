@@ -14,16 +14,16 @@ module GX::Models
     include YAML::Serializable
     include YAML::Serializable::Strict
 
-    @[YAML::Field(key: "mount_point")]
-    getter mount_point : String?
+    @[YAML::Field(key: "mount_point_base")]
+    getter mount_point_base : String?
 
     def after_initialize()
       raise InvalidEnvironmentError.new("Home directory not found") if !ENV["HOME"]?
       home_dir = ENV["HOME"]
 
       # Set default mountpoint from global if none defined
-      if @mount_point.nil? || @mount_point.try &.empty?
-        @mount_point = File.join(home_dir, "mnt")
+      if @mount_point_base.nil? || @mount_point_base.try &.empty?
+        @mount_point_base = File.join(home_dir, "mnt")
       end
     end
   end

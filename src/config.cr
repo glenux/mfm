@@ -90,13 +90,13 @@ module GX
 
       root = Models::RootConfig.from_yaml(file_patched)
 
-      global_mount_point = root.global.mount_point
-      raise Models::InvalidMountpointError.new("Invalid global mount point") if global_mount_point.nil?
+      mount_point_base_safe = root.global.mount_point_base
+      raise Models::InvalidMountpointError.new("Invalid global mount point") if mount_point_base_safe.nil?
 
       root.filesystems.each do |selected_filesystem|
         if !selected_filesystem.mount_point?
           selected_filesystem.mount_point = 
-            File.join(global_mount_point, selected_filesystem.mounted_name)
+            File.join(mount_point_base_safe, selected_filesystem.mounted_name)
         end
       end
       @root = root
