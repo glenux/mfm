@@ -38,6 +38,11 @@ module GX
           @config.verbose = true
         end
 
+        parser.on("-o", "--open", "Automatically open directory after mount") do |flag|
+          Log.info { "Auto-open enabled" }
+          @config.auto_open = true
+        end
+
         parser.on("--version", "Show version") do |flag|
           @config.mode = Config::Mode::ShowVersion
         end
@@ -93,8 +98,54 @@ module GX
       when Config::Mode::Mount
         @config.load_from_file
         filesystem = choose_filesystem
-        mount_or_umount(filesystem) if !filesystem.nil?
+        raise Models::InvalidFilesystemError.new("Invalid filesystem") if filesystem.nil?
+
+        mount_or_umount(filesystem)
+        auto_open(filesystem) if @config.auto_open
       end
+    end
+
+    def auto_open(filesystem)
+      # FIXME: support xdg-open
+      # FIXME: support mailcap
+      # FIXME: support user-defined command
+      # FIXME: detect graphical environment
+      
+      mount_point_safe = filesystem.mount_point
+      raise Models::InvalidMountpointError.new("Invalid filesystem") if mount_point_safe.nil?
+
+      if graphical_environment?
+        process = Process.new(
+          "xdg-open",  ## FIXME: make configurable
+          [mount_point_safe],
+          input: STDIN, 
+          output: STDOUT, 
+          error: STDERR
+        )
+        unless process.wait.success?
+          puts "Error opening filesystem".colorize(:red)
+          return
+        end
+      else
+        process = Process.new(
+          "vifm",  ## FIXME: make configurable
+          [mount_point_safe],
+          input: STDIN, 
+          output: STDOUT, 
+          error: STDERR
+        )
+        unless process.wait.success?
+          puts "Error opening filesystem".colorize(:red)
+          return
+        end
+      end
+    end
+
+    def graphical_environment?
+      if ENV["DISPLAY"]? || ENV["WAYLAND_DISPLAY"]?
+        return true
+      end
+      return false
     end
 
     def choose_filesystem()
@@ -134,9 +185,6 @@ module GX
     end
 
     def mount_or_umount(selected_filesystem)
-      config_root_safe = @config.root
-      return if config_root_safe.nil?
-
       if !selected_filesystem.mounted?
         selected_filesystem.mount()
       else

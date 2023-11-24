@@ -3,14 +3,14 @@ module GX::Models::Concerns
   module Base
     def mounted?() : Bool
       mount_point_safe = @mount_point
-      raise "Invalid mountpoint value" if mount_point_safe.nil?
+      raise InvalidMountpointError.new("Invalid mountpoint value") if mount_point_safe.nil?
 
       `mount`.includes?(" on #{mount_point_safe} type ")
     end
 
     def umount() : Nil
       mount_point_safe = @mount_point
-      raise "Invalid mountpoint value" if mount_point_safe.nil?
+      raise InvalidMountpointError.new("Invalid mountpoint value") if mount_point_safe.nil?
 
       system("fusermount -u #{mount_point_safe.shellescape}")
       fusermount_status = $?

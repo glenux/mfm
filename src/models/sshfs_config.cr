@@ -26,7 +26,7 @@ module GX::Models
 
     def _mount_action()
       mount_point_safe = @mount_point
-      raise "Invalid mount point" if mount_point_safe.nil?
+      raise InvalidMountpointError.new("Invalid mount point") if mount_point_safe.nil?
 
       process = Process.new(
         "sshfs", 

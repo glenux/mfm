@@ -11,6 +11,9 @@ module GX
   class Config
     Log = ::Log.for("config")
 
+    class MissingFileError < Exception
+    end
+
     enum Mode
       ConfigAdd
       ConfigDelete
@@ -31,14 +34,15 @@ module GX
     property mode : Mode
     property path : String?
     property args : AddArgs.class | DelArgs.class | NoArgs.class
+    property auto_open : Bool
 
     def initialize()
-      if !ENV["HOME"]?
-        raise "Home directory not found"
-      end
+      raise Models::InvalidEnvironmentError.new("Home directory not found") if !ENV["HOME"]?
       @home_dir = ENV["HOME"]
 
       @verbose = false
+      @auto_open = false
+
       @mode = Mode::Mount
       @filesystems = [] of Models::AbstractFilesystemConfig
       @path = nil
@@ -66,7 +70,7 @@ module GX
       end
 
       Log.error { "No configuration file found in any of the standard locations" }
-      raise "Configuration file not found"
+      raise MissingFileError.new("Configuration file not found")
     end
 
     def load_from_file
@@ -87,7 +91,7 @@ module GX
       root = Models::RootConfig.from_yaml(file_patched)
 
       global_mount_point = root.global.mount_point
-      raise "Invalid global mount point" if global_mount_point.nil?
+      raise Models::InvalidMountpointError.new("Invalid global mount point") if global_mount_point.nil?
 
       root.filesystems.each do |selected_filesystem|
         if !selected_filesystem.mount_point?

@@ -7,6 +7,9 @@ require "yaml"
 require "./abstract_filesystem_config"
 
 module GX::Models
+  class InvalidEnvironmentError < Exception
+  end
+
   class GlobalConfig
     include YAML::Serializable
     include YAML::Serializable::Strict
@@ -15,7 +18,8 @@ module GX::Models
     getter mount_point : String?
 
     def after_initialize()
-      home_dir = ENV["HOME"] || raise "Home directory not found"
+      raise InvalidEnvironmentError.new("Home directory not found") if !ENV["HOME"]?
+      home_dir = ENV["HOME"]
 
       # Set default mountpoint from global if none defined
       if @mount_point.nil? || @mount_point.try &.empty?
