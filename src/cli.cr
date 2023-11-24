@@ -173,7 +173,9 @@ module GX
         }
       end
 
-      result_filesystem_name = Fzf.run(names_display.values.map(&.[:ansi_name]).sort).strip
+      ## FIXME: feat: allow to sort by name or by filesystem
+      sorted_values = names_display.values.sort_by { |item| item[:filesystem].name }
+      result_filesystem_name = Fzf.run(sorted_values.map(&.[:ansi_name])).strip
       selected_filesystem = names_display[result_filesystem_name][:filesystem]
       puts ">> #{selected_filesystem.name}".colorize(:yellow)
 
