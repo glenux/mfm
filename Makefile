@@ -6,4 +6,8 @@
 all: build
 
 build:
-	shards build
+	shards build --error-trace
+	@echo SUCCESS
+
+watch: 
+	 watchexec --restart --delay-run 3 -c -e cr make build
