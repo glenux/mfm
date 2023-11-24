@@ -62,9 +62,12 @@ version](https://code.apps.glenux.net/glenux/mfm/releases) of MFM.
 ```
 Usage: mfm [options]
 
-Global options:
-    -c, --config FILE                Specify configuration file
-    -h, --help                       Display this help
+Global options
+    -c, --config FILE                Set configuration file
+    -v, --verbose                    Set more verbosity
+    -o, --open                       Automatically open directory after mount
+    --version                        Show version
+    -h, --help                       Show this help
 
 Commands (not implemented yet):
     create                           Add a new filesystem
