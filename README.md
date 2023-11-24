@@ -87,10 +87,11 @@ detail the filesystem names, types, and respective configurations.
 ### YAML File Format
 
 ```yaml
-# NOT IMPLEMENTED YET
-# version: "1"
-# global:
-#   mountpoint: "/home/user/mnt/{{filesystem.name}}"
+---
+version: "1"
+
+global:
+  mountpoint: "{{env.HOME}}/mnt"
 
 filesystems:
   - type: "gocryptfs"
