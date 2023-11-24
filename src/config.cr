@@ -5,7 +5,7 @@
 
 require "crinja"
 
-require "./filesystems"
+require "./models"
 
 module GX
   class Config
@@ -23,8 +23,10 @@ module GX
     record AddArgs, name : String, path : String
     record DelArgs, name : String
 
-    getter filesystems : Array(Filesystem)
+    # getter filesystems : Array(Models::AbstractFilesystemConfig)
     getter home_dir : String
+    getter root : Models::RootConfig?
+
     property verbose : Bool
     property mode : Mode
     property path : String?
@@ -38,13 +40,13 @@ module GX
 
       @verbose = false
       @mode = Mode::Mount
-      @filesystems = [] of Filesystem
+      @filesystems = [] of Models::AbstractFilesystemConfig
       @path = nil
 
       @args = NoArgs
     end
 
-    def detect_config_file()
+    private def detect_config_file()
       possible_files = [
         File.join(@home_dir, ".config", "mfm", "config.yaml"),
         File.join(@home_dir, ".config", "mfm", "config.yml"),
@@ -68,35 +70,32 @@ module GX
     end
 
     def load_from_file
-      path = @path
-      if path.nil?
-        path = detect_config_file()
+      config_path = @path
+      if config_path.nil?
+        config_path = detect_config_file()
       end
-      @path = path
-      @filesystems = [] of Filesystem
+      @path = config_path
 
-      if !File.exists? path
+      if !File.exists? config_path
         Log.error { "File #{path} does not exist!".colorize(:red) }
         exit(1)
       end
-      load_filesystems(path)
-    end
 
-    private def load_filesystems(config_path : String)
       file_data = File.read(config_path)
-      # FIXME: render template on a value basis (instead of global)
       file_patched = Crinja.render(file_data, {"env" => ENV.to_h}) 
 
-      yaml_data = YAML.parse(file_patched)
-      vaults_data = yaml_data["filesystems"].as_a
+      root = Models::RootConfig.from_yaml(file_patched)
 
-      vaults_data.each do |filesystem_data|
-        type = filesystem_data["type"].as_s
-        name = filesystem_data["name"].as_s
-        # encrypted_path = filesystem_data["encrypted_path"].as_s
-        @filesystems << Filesystem.from_yaml(filesystem_data.to_yaml)
-        # @filesystems << Filesystem.new(name, encrypted_path, "#{name}.Open")
+      global_mount_point = root.global.mount_point
+      raise "Invalid global mount point" if global_mount_point.nil?
+
+      root.filesystems.each do |selected_filesystem|
+        if !selected_filesystem.mount_point?
+          selected_filesystem.mount_point = 
+            File.join(global_mount_point, selected_filesystem.mounted_name)
+        end
       end
+      @root = root
     end
   end
 end

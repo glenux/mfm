@@ -1,0 +1,28 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# SPDX-FileCopyrightText: 2023 Glenn Y. Rolland <glenux@glenux.net>
+# Copyright © 2023 Glenn Y. Rolland <glenux@glenux.net>
+
+require "yaml"
+require "./abstract_filesystem_config"
+
+module GX::Models
+  class GlobalConfig
+    include YAML::Serializable
+    include YAML::Serializable::Strict
+
+    @[YAML::Field(key: "mount_point")]
+    getter mount_point : String?
+
+    def after_initialize()
+      home_dir = ENV["HOME"] || raise "Home directory not found"
+
+      # Set default mountpoint from global if none defined
+      if @mount_point.nil? || @mount_point.try &.empty?
+        @mount_point = File.join(home_dir, "mnt")
+      end
+    end
+  end
+end
+
+
