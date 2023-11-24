@@ -32,10 +32,7 @@ module GX::Models
         output: STDOUT, 
         error: STDERR
       )
-      unless process.wait.success?
-        puts "Error mounting the vault".colorize(:red)
-        return
-      end
+      return process.wait
     end
   end
 end

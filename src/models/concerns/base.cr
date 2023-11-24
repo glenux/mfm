@@ -42,9 +42,14 @@ module GX::Models::Concerns
         return
       end
 
-      yield
+      result_status = yield
 
-      puts "Models #{name} is now available on #{mount_point_safe}".colorize(:green)
+      if result_status.success?
+        puts "Models #{name} is now available on #{mount_point_safe}".colorize(:green)
+      else
+        puts "Error mounting the vault".colorize(:red)
+        return
+      end
     end
   end
 

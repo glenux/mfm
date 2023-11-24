@@ -39,10 +39,7 @@ module GX::Models
         output: STDOUT, 
         error: STDERR
       )
-      unless process.wait.success?
-        puts "Error mounting the filesystem".colorize(:red)
-        return
-      end
+      return process.wait
     end
   end
 end
