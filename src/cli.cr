@@ -96,6 +96,7 @@ module GX
       when Config::Mode::ShowVersion
         STDOUT.puts "#{PROGRAM_NAME} #{VERSION}"
       when Config::Mode::Mount
+        @config.load_from_env
         @config.load_from_file
         filesystem = choose_filesystem
         raise Models::InvalidFilesystemError.new("Invalid filesystem") if filesystem.nil?
