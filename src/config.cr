@@ -73,6 +73,13 @@ module GX
       raise MissingFileError.new("Configuration file not found")
     end
 
+    def load_from_env()
+      if !ENV["FZF_DEFAULT_OPTS"]? 
+        # force defaults settings if none defined
+        ENV["FZF_DEFAULT_OPTS"] = "--height 40% --layout=reverse --border"
+      end
+    end
+
     def load_from_file
       config_path = @path
       if config_path.nil?
