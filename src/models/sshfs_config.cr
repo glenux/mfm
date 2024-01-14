@@ -16,27 +16,27 @@ module GX::Models
 
     include Concerns::Base
 
-    def _mounted_prefix()
+    def _mounted_prefix
       "#{@remote_user}@#{@remote_host}:#{@remote_path}"
     end
 
-    def mounted_name()
+    def mounted_name
       @name
     end
 
-    def _mount_action()
+    def _mount_action
       mount_point_safe = @mount_point
       raise InvalidMountpointError.new("Invalid mount point") if mount_point_safe.nil?
 
       process = Process.new(
-        "sshfs", 
+        "sshfs",
         [
           "-p", remote_port,
-          "#{@remote_user}@#{@remote_host}:#{@remote_path}", 
-          mount_point_safe
-        ], 
-        input: STDIN, 
-        output: STDOUT, 
+          "#{@remote_user}@#{@remote_host}:#{@remote_path}",
+          mount_point_safe,
+        ],
+        input: STDIN,
+        output: STDOUT,
         error: STDERR
       )
       return process.wait

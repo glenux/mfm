@@ -1,14 +1,13 @@
-
 module GX::Models::Concerns
   module Base
-    def mounted?() : Bool
+    def mounted? : Bool
       mount_point_safe = @mount_point
       raise InvalidMountpointError.new("Invalid mountpoint value") if mount_point_safe.nil?
 
       `mount`.includes?(" on #{mount_point_safe} type ")
     end
 
-    def umount() : Nil
+    def umount : Nil
       mount_point_safe = @mount_point
       raise InvalidMountpointError.new("Invalid mountpoint value") if mount_point_safe.nil?
 
@@ -22,11 +21,11 @@ module GX::Models::Concerns
       end
     end
 
-    def mount_point?()
+    def mount_point?
       !mount_point.nil?
     end
 
-    def mount()
+    def mount
       _mount_wrapper() do
         _mount_action
       end
@@ -52,5 +51,4 @@ module GX::Models::Concerns
       end
     end
   end
-
 end

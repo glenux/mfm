@@ -17,7 +17,7 @@ module GX::Models
     @[YAML::Field(key: "mount_point_base")]
     getter mount_point_base : String?
 
-    def after_initialize()
+    def after_initialize
       raise InvalidEnvironmentError.new("Home directory not found") if !ENV["HOME"]?
       home_dir = ENV["HOME"]
 
@@ -28,5 +28,3 @@ module GX::Models
     end
   end
 end
-
-

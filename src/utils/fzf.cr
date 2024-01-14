@@ -3,9 +3,8 @@
 # SPDX-FileCopyrightText: 2023 Glenn Y. Rolland <glenux@glenux.net>
 # Copyright © 2023 Glenn Y. Rolland <glenux@glenux.net>
 
-module GX
+module GX::Utils
   class Fzf
-
     def self.run(list : Array(String)) : String
       input = IO::Memory.new
       input.puts list.join("\n")
@@ -29,8 +28,7 @@ module GX
         exit(1)
       end
 
-      result = output.to_s.strip #.split.first?
+      result = output.to_s.strip # .split.first?
     end
   end
 end
-

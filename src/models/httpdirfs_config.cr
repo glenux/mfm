@@ -13,23 +13,23 @@ module GX::Models
 
     include Concerns::Base
 
-    def _mounted_prefix()
+    def _mounted_prefix
       "httpdirfs"
     end
 
-    def mounted_name()
+    def mounted_name
       @name
     end
 
-    def _mount_action()
+    def _mount_action
       mount_point_safe = @mount_point
       raise InvalidMountpointError.new("Invalid mount point") if mount_point_safe.nil?
 
       process = Process.new(
-        "httpdirfs", 
-        ["#{@url}", mount_point_safe], 
-        input: STDIN, 
-        output: STDOUT, 
+        "httpdirfs",
+        ["#{@url}", mount_point_safe],
+        input: STDIN,
+        output: STDOUT,
         error: STDERR
       )
       return process.wait

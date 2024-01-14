@@ -17,9 +17,9 @@ module GX::Models
     # include YAML::Serializable::Strict
 
     use_yaml_discriminator "type", {
-      gocryptfs: GoCryptFSConfig, 
-      sshfs: SshFSConfig,
-      httpdirfs: HttpDirFSConfig
+      gocryptfs: GoCryptFSConfig,
+      sshfs:     SshFSConfig,
+      httpdirfs: HttpDirFSConfig,
     }
 
     getter type : String
@@ -27,12 +27,12 @@ module GX::Models
     property mount_point : String?
 
     abstract def _mount_wrapper(&block)
-    abstract def _mount_action()
-    abstract def _mounted_prefix()
-    abstract def mounted_name()
-    abstract def mounted?()
-    abstract def mount()
-    abstract def umount()
-    abstract def mount_point?()
+    abstract def _mount_action
+    abstract def _mounted_prefix
+    abstract def mounted_name
+    abstract def mounted?
+    abstract def mount
+    abstract def umount
+    abstract def mount_point?
   end
 end

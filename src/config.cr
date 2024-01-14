@@ -6,20 +6,17 @@
 require "crinja"
 
 require "./models"
+require "./types/modes"
+require "./parsers/options/help_options"
+require "./parsers/options/config_options"
+require "./parsers/options/config_init_options"
+require "./commands/abstract_command"
 
 module GX
   class Config
     Log = ::Log.for("config")
 
     class MissingFileError < Exception
-    end
-
-    enum Mode
-      ConfigAdd
-      ConfigDelete
-      ConfigEdit
-      ShowVersion
-      Mount
     end
 
     record NoArgs
@@ -31,26 +28,31 @@ module GX
     getter root : Models::RootConfig?
 
     property verbose : Bool
-    property mode : Mode
+    property mode : Types::Mode
     property path : String?
     property args : AddArgs.class | DelArgs.class | NoArgs.class
     property auto_open : Bool
 
-    def initialize()
+    # FIXME: refactor and remove these parts from here
+    property help_options : Parsers::Options::HelpOptions?
+    property config_init_options : Parsers::Options::ConfigInitOptions?
+    property config_options : Parsers::Options::ConfigOptions?
+
+    def initialize
       raise Models::InvalidEnvironmentError.new("Home directory not found") if !ENV["HOME"]?
       @home_dir = ENV["HOME"]
 
       @verbose = false
       @auto_open = false
 
-      @mode = Mode::Mount
+      @mode = Types::Mode::GlobalTui
       @filesystems = [] of Models::AbstractFilesystemConfig
       @path = nil
 
       @args = NoArgs
     end
 
-    private def detect_config_file()
+    private def detect_config_file
       possible_files = [
         File.join(@home_dir, ".config", "mfm", "config.yaml"),
         File.join(@home_dir, ".config", "mfm", "config.yml"),
@@ -73,8 +75,8 @@ module GX
       raise MissingFileError.new("Configuration file not found")
     end
 
-    def load_from_env()
-      if !ENV["FZF_DEFAULT_OPTS"]? 
+    def load_from_env
+      if !ENV["FZF_DEFAULT_OPTS"]?
         # force defaults settings if none defined
         ENV["FZF_DEFAULT_OPTS"] = "--height 40% --layout=reverse --border"
       end
@@ -93,7 +95,7 @@ module GX
       end
 
       file_data = File.read(config_path)
-      file_patched = Crinja.render(file_data, {"env" => ENV.to_h}) 
+      file_patched = Crinja.render(file_data, {"env" => ENV.to_h})
 
       root = Models::RootConfig.from_yaml(file_patched)
 
@@ -102,7 +104,7 @@ module GX
 
       root.filesystems.each do |selected_filesystem|
         if !selected_filesystem.mount_point?
-          selected_filesystem.mount_point = 
+          selected_filesystem.mount_point =
             File.join(mount_point_base_safe, selected_filesystem.mounted_name)
         end
       end

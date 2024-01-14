@@ -34,5 +34,3 @@ end
 app = GX::Cli.new
 app.parse_command_line(ARGV)
 app.run
-
-
