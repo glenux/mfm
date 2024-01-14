@@ -66,6 +66,8 @@ version](https://code.apps.glenux.net/glenux/mfm/releases) of MFM.
 
 ### Command Line Options
 
+Global
+
 ```
 Usage: mfm [options]
 
@@ -77,9 +79,43 @@ Global options
     -h, --help                       Show this help
 
 Commands (not implemented yet):
-    create                           Add a new filesystem
-    delete                           Remove an existing filesystem
-    edit                             Modify the configuration
+    config                           Manage configuration file
+    mapping                          Manage filesystems
+```
+
+Config management
+
+```
+Usage: mfm filesystem [options]
+
+Global options
+    -c, --config FILE                Set configuration file
+    -v, --verbose                    Set more verbosity
+    -o, --open                       Automatically open directory after mount
+    --version                        Show version
+    -h, --help                       Show this help
+
+Commands (not implemented yet):
+    init                             Create init file
+```
+
+Filesystem management
+
+```
+Usage: mfm mapping [options]
+
+Global options
+    -c, --config FILE                Set configuration file
+    -v, --verbose                    Set more verbosity
+    -o, --open                       Automatically open directory after mount
+    --version                        Show version
+    -h, --help                       Show this help
+
+Commands (not implemented yet):
+    list                             List fuse mappings
+    create                           Create new fuse mapping
+    edit                             Edit fuse mapping
+    delete                           Create new fuse mapping
 ```
 
 ### Demo
