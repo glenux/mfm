@@ -23,33 +23,37 @@ module GX::Parsers
 
       parser.on("create", "Create mapping") do
         config.mode = Types::Mode::MappingCreate
-
-        pp parser
+        # pp parser
         parser.banner = Utils.usage_line(breadcrumbs + "create", "Create mapping", true)
         parser.separator("\nCreate options")
 
-        parser.on("-n", "--name", "Set vault name") do |name|
+        parser.on("-t", "--type TYPE", "Set filesystem type") do |type|
+          add_args = add_args.merge({type: type})
+        end
+
+        parser.on("-n", "--name", "Set mapping name") do |name|
           add_args = add_args.merge({name: name})
         end
-        parser.on("-p", "--path", "Set vault encrypted path") do |path|
+
+        parser.on("-p", "--path", "Set mapping encrypted path") do |path|
           add_args = add_args.merge({path: path})
         end
         parser.separator(Utils.help_line(breadcrumbs + "create"))
       end
 
-      parser.on("edit", "Edit configuration") do |flag|
+      parser.on("edit", "Edit configuration") do |_|
         config.mode = Types::Mode::MappingEdit
         parser.separator(Utils.help_line(breadcrumbs + "edit"))
         # abort("FIXME: Not implemented")
       end
 
-      parser.on("mount", "Mount mapping") do |flag|
+      parser.on("mount", "Mount mapping") do |_|
         config.mode = Types::Mode::MappingMount
         parser.separator(Utils.help_line(breadcrumbs + "mount"))
         # abort("FIXME: Not implemented")
       end
 
-      parser.on("umount", "Umount mapping") do |flag|
+      parser.on("umount", "Umount mapping") do |_|
         config.mode = Types::Mode::MappingUmount
         parser.separator(Utils.help_line(breadcrumbs + "umount"))
         # abort("FIXME: Not implemented")
@@ -61,7 +65,7 @@ module GX::Parsers
         parser.banner = Utils.usage_line(breadcrumbs + "delete", "Delete mapping", true)
         parser.separator("\nDelete options")
 
-        parser.on("-n", "--name", "Set vault name") do |name|
+        parser.on("-n", "--name", "Set mapping name") do |name|
           delete_args = delete_args.merge({name: name})
         end
         parser.separator(Utils.help_line(breadcrumbs + "delete"))

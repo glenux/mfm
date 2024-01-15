@@ -46,7 +46,7 @@ module GX::Models::Concerns
       if result_status.success?
         puts "Models #{name} is now available on #{mount_point_safe}".colorize(:green)
       else
-        puts "Error mounting the vault".colorize(:red)
+        puts "Error mounting the mapping".colorize(:red)
         return
       end
     end

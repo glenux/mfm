@@ -120,7 +120,7 @@ module GX
       puts ">> #{selected_filesystem.name}".colorize(:yellow)
 
       if !selected_filesystem
-        STDERR.puts "Vault not found: #{selected_filesystem}.".colorize(:red)
+        STDERR.puts "Mapping not found: #{selected_filesystem}.".colorize(:red)
         return
       end
       return selected_filesystem
