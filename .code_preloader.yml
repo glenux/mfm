@@ -8,8 +8,15 @@
 
 # List of patterns to ignore during preloading
 ignore_list:
-  - ^\.git/.*
+  - ^\.git/
   - ^lib.*
+  - ^doc/
+  - ^bin/
+  - ^_prompts/
+  - ^\.reuse/
+  - ^LICENSES/
+  - ^\.vagrant/
+  - ^scripts/
 
 # Path to the output file (if null, output to STDOUT)
 output_path: null
