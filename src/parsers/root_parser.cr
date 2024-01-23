@@ -21,24 +21,24 @@ module GX::Parsers
         config.path = path
       end
 
-      parser.on("-v", "--verbose", "Set more verbosity") do |flag|
+      parser.on("-v", "--verbose", "Set more verbosity") do |_|
         Log.info { "Verbosity enabled" }
         config.verbose = true
       end
 
-      parser.on("-o", "--open", "Automatically open directory after mount") do |flag|
+      parser.on("-o", "--open", "Automatically open directory after mount") do |_|
         Log.info { "Auto-open enabled" }
         config.auto_open = true
       end
 
-      parser.on("--version", "Show version") do |flag|
+      parser.on("--version", "Show version") do |_|
         config.mode = Types::Mode::GlobalVersion
       end
 
-      parser.on("-h", "--help", "Show this help") do |flag|
+      parser.on("-h", "--help", "Show this help") do |_|
         config.mode = Types::Mode::GlobalHelp
         config.help_options = Parsers::Options::HelpOptions.new
-        config.help_options.try { |opts| opts.parser_snapshot = parser.dup }
+        config.help_options.try(&.parser_snapshot=(parser.dup))
       end
 
       parser.separator("\nGlobal commands:")
@@ -46,7 +46,7 @@ module GX::Parsers
       parser.on("config", "Manage configuration file") do
         config.mode = Types::Mode::GlobalHelp
         config.help_options = Parsers::Options::HelpOptions.new
-        config.help_options.try { |opts| opts.parser_snapshot = parser.dup }
+        config.help_options.try(&.parser_snapshot=(parser.dup))
 
         # config.command = Commands::Config.new(config)
         Parsers::ConfigParser.new.build(parser, breadcrumbs, config)
@@ -59,7 +59,7 @@ module GX::Parsers
       parser.on("mapping", "Manage mappings") do
         config.mode = Types::Mode::GlobalHelp
         config.help_options = Parsers::Options::HelpOptions.new
-        config.help_options.try { |opts| opts.parser_snapshot = parser.dup }
+        config.help_options.try(&.parser_snapshot=(parser.dup))
 
         Parsers::MappingParser.new.build(parser, breadcrumbs, config)
       end
