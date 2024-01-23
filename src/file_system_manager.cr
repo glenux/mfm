@@ -89,7 +89,9 @@ module GX
     end
 
     def choose_filesystem
-      names_display = {} of String => NamedTuple(filesystem: Models::AbstractFilesystemConfig, ansi_name: String)
+      names_display = {} of String => NamedTuple(
+        filesystem: Models::AbstractFilesystemConfig,
+        ansi_name: String)
 
       config_root = @config.root
       return if config_root.nil?
@@ -114,7 +116,7 @@ module GX
       end
 
       # # FIXME: feat: allow to sort by name or by filesystem
-      sorted_values = names_display.values.sort_by { |item| item[:filesystem].name }
+      sorted_values = names_display.values.sort_by!(&.[:filesystem].name)
       result_filesystem_name = Utils::Fzf.run(sorted_values.map(&.[:ansi_name])).strip
       selected_filesystem = names_display[result_filesystem_name][:filesystem]
       puts ">> #{selected_filesystem.name}".colorize(:yellow)
@@ -123,7 +125,7 @@ module GX
         STDERR.puts "Mapping not found: #{selected_filesystem}.".colorize(:red)
         return
       end
-      return selected_filesystem
+      selected_filesystem
     end
 
     private def generate_display_name(filesystem : Models::AbstractFilesystemConfig) : String
@@ -136,7 +138,7 @@ module GX
       if ENV["DISPLAY"]? || ENV["WAYLAND_DISPLAY"]?
         return true
       end
-      return false
+      false
     end
   end
 end
