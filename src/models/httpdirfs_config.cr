@@ -32,7 +32,7 @@ module GX::Models
         output: STDOUT,
         error: STDERR
       )
-      return process.wait
+      process.wait
     end
   end
 end
