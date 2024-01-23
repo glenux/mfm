@@ -31,7 +31,7 @@ module GX::Models::Concerns
       end
     end
 
-    def _mount_wrapper(&block) : Nil
+    def _mount_wrapper(&) : Nil
       mount_point_safe = mount_point
       return if mount_point_safe.nil?
 
