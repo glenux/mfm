@@ -1,0 +1,32 @@
+---
+version: 1
+
+global:
+  mount_point_base: "{{env.HOME}}/mnt"
+
+filesystems:
+  ##
+  ## Sample configuration for encrypted vault (gocryptfs)
+  ##
+  # - type: gocryptfs
+  #   name: "Credential Vault"
+  #   encrypted_path: "{{env.HOME}}/Documents/Credential.Vault"
+  #
+  ##
+  ## Sample configuration remote SSH directory (sshfs)
+  ##
+  # - type: sshfs
+  #   name: "Remote SSH server"
+  #   remote_host: ssh.example.com
+  #   remote_user: "{{env.USER}}"
+  #   remote_path: "/home/{{env.USER}}"
+  #   remote_port: 443
+  #
+  ##
+  ## Sample configuration for remote HTTP directory (httpdirfs)
+  ##
+  - type: httpdirfs
+    name: "Debian Repository"
+    url: "http://ftp.debian.org/debian/"
+    # mount_point: "{{env.HOME}}/another.dir"
+#
