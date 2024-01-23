@@ -8,15 +8,20 @@
 
 # List of patterns to ignore during preloading
 ignore_list:
-  - ^\.git/
-  - ^lib.*
-  - ^doc/
   - ^bin/
+  - ^\.code_preloader.yml
+  - ^doc/
+  - ^\.drone.yml
+  - ^\.git/
+  - ^\.gitattributes
+  - ^\.gitignore
+  - ^lib.*
+  - ^LICENSES/
   - ^_prompts/
   - ^\.reuse/
-  - ^LICENSES/
-  - ^\.vagrant/
   - ^scripts/
+  - ^\.tool-versions
+  - ^\.vagrant/
 
 # Path to the output file (if null, output to STDOUT)
 output_path: null
