@@ -6,10 +6,12 @@ module GX::Commands
     end
 
     def execute
+      puts "FIXME: detect option (either zsh or bash)"
+      puts "FIXME: output the right file from embedded data"
     end
 
     def self.handles_mode
-      GX::Types::Mode::GlobalConfig
+      GX::Types::Mode::GlobalCompletion
     end
   end
 end
