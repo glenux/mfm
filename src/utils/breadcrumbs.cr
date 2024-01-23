@@ -4,12 +4,12 @@ module GX::Utils
       @ancestors = base
     end
 
-    def +(elem : String)
-      b = BreadCrumbs.new(@ancestors + [elem])
+    def +(other : String)
+      BreadCrumbs.new(@ancestors + [other])
     end
 
-    def to_s
-      @ancestors.join(" ")
+    def to_s(io : IO)
+      io << @ancestors.join(" ")
     end
 
     def to_a
