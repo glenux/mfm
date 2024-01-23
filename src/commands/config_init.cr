@@ -6,6 +6,9 @@ module GX::Commands
     end
 
     def execute
+      puts "FIXME: detect if config is present"
+      puts "FIXME: compute config path (either default, or from command line)"
+      puts "FIXME: create config file from default if needed"
     end
 
     def self.handles_mode
