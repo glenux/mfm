@@ -12,11 +12,11 @@ module GX::Parsers
       )
       parser.separator("\nCompletion commands:")
 
-      parser.on("--bash", "Generate bash completion") do |flag|
+      parser.on("--bash", "Generate bash completion") do |_|
         Log.info { "Set bash completion" }
       end
 
-      parser.on("--zsh", "Generate zsh completion") do |flag|
+      parser.on("--zsh", "Generate zsh completion") do |_|
         Log.info { "Set zsh completion" }
       end
 
