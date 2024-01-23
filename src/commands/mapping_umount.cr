@@ -5,7 +5,7 @@ module GX::Commands
   class MappingUmount < AbstractCommand
     @file_system_manager : FileSystemManager
 
-    def initialize(@config : GX::Config) # FIXME
+    def initialize(@config : GX::Config)
       @config.load_from_env
       @config.load_from_file
       @file_system_manager = FileSystemManager.new(@config)

@@ -2,7 +2,7 @@ require "./abstract_command"
 
 module GX::Commands
   class GlobalHelp < AbstractCommand
-    def initialize(@config : GX::Config) # FIXME
+    def initialize(@config : GX::Config)
     end
 
     def execute
