@@ -30,19 +30,35 @@ module GX::Parsers
         parser.on("-t", "--type TYPE", "Set filesystem type") do |type|
           add_args = add_args.merge({type: type})
         end
-
         parser.on("-n", "--name", "Set mapping name") do |name|
           add_args = add_args.merge({name: name})
         end
-
-        parser.on("-p", "--path", "Set mapping encrypted path") do |path|
-          add_args = add_args.merge({path: path})
+        parser.on("--remote-user USER", "Set SSH user") do |user|
+          add_args = add_args.merge({remote_user: user})
         end
+        parser.on("--remote-host HOST", "Set SSH host") do |host|
+          add_args = add_args.merge({remote_host: host})
+        end
+        parser.on("--source-path PATH", "Set remote path") do |path|
+          add_args = add_args.merge({remote_path: path})
+        end
+
         parser.separator(Utils.help_line(breadcrumbs + "create"))
       end
 
       parser.on("edit", "Edit configuration") do |_|
         config.mode = Types::Mode::MappingEdit
+
+        parser.on("--remote-user USER", "Set SSH user") do |user|
+          add_args = add_args.merge({remote_user: user})
+        end
+        parser.on("--remote-host HOST", "Set SSH host") do |host|
+          add_args = add_args.merge({remote_host: host})
+        end
+        parser.on("--source-path PATH", "Set remote path") do |path|
+          add_args = add_args.merge({remote_path: path})
+        end
+
         parser.separator(Utils.help_line(breadcrumbs + "edit"))
         # abort("FIXME: Not implemented")
       end
