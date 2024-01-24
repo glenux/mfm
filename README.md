@@ -44,18 +44,23 @@ To build from source, you'll also need:
 For Debian/Ubuntu you can use the following command:
 
 ```shell-session
-$ sudo apt-get update && sudo apt-get install libpcre3-dev libevent-2.1-dev
+$ sudo apt-get update && sudo apt-get install libpcre3-dev libevent-2.1-dev make
 ```
 
 ## Installation
 
 ### 1. From Source
 
-1. Clone or download the source code.
-2. Navigate to the source directory.
-3. Run `shards install` to fetch dependencies.
-4. Compile using `shards build`.
-5. The compiled binary will be in the `bin` directory.
+To get started with MFM, ensure that you have the prerequisites installed on your system (see above).
+
+Then follow these steps to install:
+
+    git clone https://code.apps.glenux.net/glenux/mfm
+    cd mfm
+    make prepare
+    make build
+    sudo make install                 # either to install system-wide
+    make install PREFIX=$HOME/.local  # or to install as a user
 
 ### 2. Binary Download
 
