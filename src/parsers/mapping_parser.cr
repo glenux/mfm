@@ -20,7 +20,6 @@ module GX::Parsers
       parser.on("list", "List mappings") do
         config.mode = Types::Mode::MappingList
         parser.separator(Utils.help_line(breadcrumbs + "list"))
-        # abort("FIXME: Not implemented")
       end
 
       parser.on("create", "Create mapping") do
