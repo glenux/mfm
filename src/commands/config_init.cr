@@ -1,14 +1,36 @@
 require "./abstract_command"
+require "../file_storage"
 
 module GX::Commands
   class ConfigInit < AbstractCommand
-    def initialize(config : GX::Config) # FIXME
+    def initialize(@config : GX::Config)
     end
 
     def execute
-      puts "FIXME: detect if config is present"
-      puts "FIXME: compute config path (either default, or from command line)"
-      puts "FIXME: create config file from default if needed"
+      config_dir = File.join(@config.home_dir, ".config", "mfm")
+      config_file_path = File.join(config_dir, "config.yml")
+
+      # Guard condition to exit if the configuration file already exists
+      if File.exists?(config_file_path)
+        puts "Configuration file already exists at #{config_file_path}. No action taken."
+        return
+      end
+
+      puts "Creating initial configuration file at #{config_file_path}"
+
+      # Ensure the configuration directory exists
+      FileUtils.mkdir_p(config_dir)
+
+      # Read the default configuration content from the baked file storage
+      default_config_content = FileStorage.get("sample.mfm.yaml")
+
+      # Write the default configuration to the target path
+      File.write(config_file_path, default_config_content)
+
+      puts "Configuration file created successfully."
+    rescue ex
+      STDERR.puts "Error creating the configuration file: #{ex.message}"
+      exit(1)
     end
 
     def self.handles_mode

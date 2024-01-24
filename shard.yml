@@ -26,6 +26,9 @@ dependencies:
     github: hugopl/version_from_shard
   tablo:
     github: hutou/tablo
+  baked_file_system:
+    github: schovi/baked_file_system
+    version: 0.10.0
 
 development_dependencies:
   ameba:
