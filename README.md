@@ -180,5 +180,5 @@ By contributing, you agree to our code of conduct and license terms.
 
 ## License
 
-GNU GPL-3
+GNU GPL-3 
 
