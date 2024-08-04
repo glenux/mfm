@@ -69,7 +69,10 @@ module GX::Parsers
       # end
 
       parser.on("completion", "Manage completion") do
-        config.mode = Types::Mode::GlobalCompletion
+        config.mode = Types::Mode::GlobalHelp
+        config.help_options = Parsers::Options::HelpOptions.new
+        config.help_options.try(&.parser_snapshot=(parser.dup))
+
         Parsers::CompletionParser.new.build(parser, breadcrumbs, config)
       end
 
