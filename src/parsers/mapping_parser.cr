@@ -37,7 +37,7 @@ module GX::Parsers
 
         # Filesystem specific
         parser.on("--encrypted-path PATH", "Set encrypted path (for gocryptfs)") do |path|
-          encrypted_path = path
+          create_args = create_args.merge({encrypted_path: path})
         end
         parser.on("--remote-user USER", "Set SSH user (for sshfs)") do |user|
           create_args = create_args.merge({remote_user: user})
