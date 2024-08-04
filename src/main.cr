@@ -22,7 +22,7 @@ struct BaseFormat < Log::StaticFormatter
 end
 
 Log.setup do |config|
-  backend = Log::IOBackend.new(formatter: BaseFormat)
+  backend = Log::IOBackend.new(io: STDERR, formatter: BaseFormat)
   config.bind "*", Log::Severity::Info, backend
 
   if ENV["LOG_LEVEL"]?
