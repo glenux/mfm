@@ -4,10 +4,14 @@ module GX::Types
 
     GlobalVersion
     GlobalHelp
-    GlobalCompletion
+    # GlobalCompletion
     GlobalTui
     GlobalConfig
     GlobalMapping
+
+    CompletionBash
+    CompletionZsh
+    CompletionAutodetect
 
     ConfigInit
 
