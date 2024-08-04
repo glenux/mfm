@@ -88,7 +88,7 @@ module GX
       config_root.filesystems
     end
 
-    def choose_filesystem
+    def choose_filesystem : GX::Models::AbstractFilesystemConfig?
       names_display = {} of String => NamedTuple(
         filesystem: Models::AbstractFilesystemConfig,
         ansi_name: String)
@@ -97,17 +97,8 @@ module GX
       return if config_root.nil?
 
       config_root.filesystems.each do |filesystem|
-        fs_str = filesystem.type.ljust(12, ' ')
-
-        suffix = ""
-        suffix_ansi = ""
-        if filesystem.mounted?
-          suffix = "[open]"
-          suffix_ansi = "[#{"open".colorize(:green)}]"
-        end
-
-        result_name = "#{fs_str} #{filesystem.name} #{suffix}".strip
-        ansi_name = "#{fs_str.colorize(:dark_gray)} #{filesystem.name} #{suffix_ansi}".strip
+        result_name = _fzf_plain_name(filesystem)
+        ansi_name = _fzf_ansi_name(filesystem)
 
         names_display[result_name] = {
           filesystem: filesystem,
@@ -128,9 +119,15 @@ module GX
       selected_filesystem
     end
 
-    private def generate_display_name(filesystem : Models::AbstractFilesystemConfig) : String
+    private def _fzf_plain_name(filesystem : Models::AbstractFilesystemConfig) : String
       fs_str = filesystem.type.ljust(12, ' ')
       suffix = filesystem.mounted? ? "[open]" : ""
+      "#{fs_str} #{filesystem.name} #{suffix}".strip
+    end
+
+    private def _fzf_ansi_name(filesystem : Models::AbstractFilesystemConfig) : String
+      fs_str = filesystem.type.ljust(12, ' ').colorize(:dark_gray)
+      suffix = filesystem.mounted? ? "[#{"open".colorize(:green)}]" : ""
       "#{fs_str} #{filesystem.name} #{suffix}".strip
     end
 
