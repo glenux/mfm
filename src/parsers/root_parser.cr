@@ -64,10 +64,6 @@ module GX::Parsers
         Parsers::MappingParser.new.build(parser, breadcrumbs, config)
       end
 
-      # parser.on("interactive", "Interactive mapping mount/umount") do
-      #   abort("FIXME: Not implemented")
-      # end
-
       parser.on("completion", "Manage completion") do
         config.mode = Types::Mode::GlobalCompletion
         Parsers::CompletionParser.new.build(parser, breadcrumbs, config)
