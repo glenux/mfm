@@ -27,5 +27,8 @@ install:
 		bin/mfm \
 		$(PREFIX)/bin
 
+clean:
+	rm -f bin/mfm
+
 .PHONY: spec test build all prepare install
 
