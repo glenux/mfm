@@ -7,7 +7,7 @@ module GX::Types
     GlobalCompletion
     GlobalTui
     GlobalConfig
-    GlobalMapping
+    # GlobalMapping
 
     ConfigInit
 
