@@ -16,7 +16,7 @@ module GX
   class Cli
     Log = ::Log.for("cli")
 
-    @config : GX::Config
+   @config : GX::Config
 
     def initialize
       # Main execution starts here
