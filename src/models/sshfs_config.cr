@@ -13,6 +13,7 @@ module GX::Models
     getter remote_user : String = ""
     getter remote_host : String = ""
     getter remote_port : String = "22"
+    getter options : Array(String) = [] of String
 
     include Concerns::Base
 
@@ -28,13 +29,19 @@ module GX::Models
       mount_point_safe = @mount_point
       raise InvalidMountpointError.new("Invalid mount point") if mount_point_safe.nil?
 
+      options = [] of String
+      # merge sshfs options
+      @options.each do |option|
+        options.push("-o", option)
+      end
+      options.push("-p", remote_port)
+      options.push(
+        "#{@remote_user}@#{@remote_host}:#{@remote_path}",
+          mount_point_safe
+      )
       process = Process.new(
         "sshfs",
-        [
-          "-p", remote_port,
-          "#{@remote_user}@#{@remote_host}:#{@remote_path}",
-          mount_point_safe,
-        ],
+        options,
         input: STDIN,
         output: STDOUT,
         error: STDERR
@@ -43,3 +50,4 @@ module GX::Models
     end
   end
 end
+

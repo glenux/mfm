@@ -31,6 +31,6 @@ Log.setup do |config|
   end
 end
 
-app = GX::Cli.new
-app.parse_command_line(ARGV)
-app.run
+cli = GX::Cli.new
+cli.parse_command_line(ARGV)
+cli.run
