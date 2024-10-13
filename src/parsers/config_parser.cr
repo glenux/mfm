@@ -23,7 +23,7 @@ module GX::Parsers
         parser.banner = Utils.usage_line(breadcrumbs + "init", "Create initial mfm configuration")
         parser.separator("\nInit options")
 
-        parser.on("-p", "--path", "Set mapping encrypted path") do |path|
+        parser.on("-p", "--path PATH", "Set mapping encrypted path") do |path|
           config.config_init_options.try do |opts|
             opts.path = path
           end
