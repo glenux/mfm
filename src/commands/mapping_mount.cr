@@ -14,7 +14,6 @@ module GX::Commands
     def execute
       filesystem = @file_system_manager.choose_filesystem
       raise Models::InvalidFilesystemError.new("Invalid filesystem") if filesystem.nil?
-      # @file_system_manager.mount_or_umount(filesystem)
       filesystem.mount
       @file_system_manager.auto_open(filesystem) if filesystem.mounted? && @config.auto_open
     end

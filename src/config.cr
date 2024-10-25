@@ -10,6 +10,10 @@ require "./types/modes"
 require "./parsers/options/help_options"
 require "./parsers/options/config_options"
 require "./parsers/options/config_init_options"
+require "./parsers/options/mapping_create_options"
+require "./parsers/options/mapping_delete_options"
+require "./parsers/options/mapping_mount_options"
+require "./parsers/options/mapping_umount_options"
 require "./commands/abstract_command"
 
 module GX

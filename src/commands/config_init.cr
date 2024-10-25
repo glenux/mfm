@@ -10,6 +10,16 @@ module GX::Commands
       config_dir = File.join(@config.home_dir, ".config", "mfm")
       config_file_path = File.join(config_dir, "config.yml")
 
+      # Override the configuration path if provided
+      puts "Configuration file path: #{config_file_path}"
+      puts "Configuration file path: #{@config.path}"
+      pp @config
+      @config.path.try do |path|
+        config_file_path = path
+        config_dir = File.dirname(path)
+      end
+      exit 1
+
       # Guard condition to exit if the configuration file already exists
       if File.exists?(config_file_path)
         puts "Configuration file already exists at #{config_file_path}. No action taken."
