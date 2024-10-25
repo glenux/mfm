@@ -7,7 +7,7 @@
 #   - "path/to/repo2"
 
 # List of patterns to ignore during preloading
-ignore_list:
+exclude_list:
   - ^bin/
   - ^\.code_preloader.yml
   - ^doc/
