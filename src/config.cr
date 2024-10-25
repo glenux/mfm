@@ -37,6 +37,7 @@ module GX
     property help_options : Parsers::Options::HelpOptions?
     property config_init_options : Parsers::Options::ConfigInitOptions?
     property config_options : Parsers::Options::ConfigOptions?
+    property mapping_create_options : Parsers::Options::MappingCreateOptions?
 
     def initialize
       raise Models::InvalidEnvironmentError.new("Home directory not found") if !ENV["HOME"]?
