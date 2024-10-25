@@ -7,3 +7,5 @@
 .vagrant
 bin
 lib
+.aider*
+.env
