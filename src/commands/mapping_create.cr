@@ -8,6 +8,8 @@ module GX::Commands
     end
 
     def execute
+      # FIXME: verify that filesystem is valid or return an error
+
       # Assuming create_args is passed to this command with necessary details
       create_args = @config.create_args
 
