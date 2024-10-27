@@ -21,6 +21,9 @@ spec: test
 test:
 	crystal spec --error-trace
 
+format:
+	crystal tool format
+
 install:
 	install \
 		-m 755 \
