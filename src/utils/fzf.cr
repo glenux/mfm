@@ -28,7 +28,8 @@ module GX::Utils
         exit(1)
       end
 
-      result = output.to_s.strip # .split.first?
+      # result
+      output.to_s.strip
     end
   end
 end
