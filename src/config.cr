@@ -37,10 +37,11 @@ module GX
     property args : AddArgs.class | DelArgs.class | NoArgs.class
     property? auto_open : Bool
 
-    # FIXME: refactor and remove these parts from here
-    property help_options : Parsers::Options::HelpOptions?
+    # TODO: refactor and remove these parts from here
     property config_init_options : Parsers::Options::ConfigInitOptions?
     property config_options : Parsers::Options::ConfigOptions?
+    property help_options : Parsers::Options::HelpOptions?
+    property mapping_create_options : Parsers::Options::MappingCreateOptions?
     property mapping_create_options : Parsers::Options::MappingCreateOptions?
 
     def initialize

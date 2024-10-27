@@ -13,6 +13,11 @@ module GX::Models
 
     include Concerns::Base
 
+    def initialize(create_options)
+      @name = create_options.name.as(String)
+      @encrypted_path = create_options.encrypted_path.as(String)
+    end
+
     def _mounted_prefix
       "#{encrypted_path}"
     end
@@ -34,5 +39,6 @@ module GX::Models
       )
       process.wait
     end
+    def self.name ; "gocryptfs" ; end
   end
 end

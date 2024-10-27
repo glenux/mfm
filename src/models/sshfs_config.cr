@@ -16,6 +16,14 @@ module GX::Models
 
     include Concerns::Base
 
+    def initialize(create_options)
+      @name = create_options.name.as(String)
+      @remote_user = create_options.remote_user.as(String)
+      @remote_host = create_options.remote_host.as(String)
+      @remote_path = create_options.remote_path.as(String)
+      @remote_port = create_options.remote_port.as(String)
+    end
+
     def _mounted_prefix
       "#{@remote_user}@#{@remote_host}:#{@remote_path}"
     end
@@ -41,5 +49,6 @@ module GX::Models
       )
       process.wait
     end
+    def self.name ; "sshfs" ; end
   end
 end

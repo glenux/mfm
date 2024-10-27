@@ -13,6 +13,11 @@ module GX::Models
 
     include Concerns::Base
 
+    def initialize(create_options)
+      @name = create_options.name.as(String)
+      @url = create_options.url.as(String)
+    end
+
     def _mounted_prefix
       "httpdirfs"
     end
@@ -34,5 +39,6 @@ module GX::Models
       )
       process.wait
     end
+    def self.name ; "httpdirfs" ; end
   end
 end

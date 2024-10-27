@@ -13,51 +13,44 @@ module GX::Commands
     end
 
     def execute
-      # FIXME: verify that filesystem is valid or return an error
-
-      # Assuming create_args is passed to this command with necessary details
-      create_args = @config.create_args
+      # Assuming mapping_create_options is passed to this command with necessary details
+      create_options = @config.mapping_create_options
 
       # Validate required arguments
-      if create_args[:name].empty? || create_args[:path].empty?
-        raise ArgumentError.new("Name and path are required to create a mapping.")
+      if create_options.nil?
+        raise ArgumentError.new("Mapping create options are required")
+      end
+      if create_options.name.nil? || create_options.name.try &.empty?
+        raise ArgumentError.new("Name is required to create a mapping.")
+      end
+      if create_options.type.nil? || create_options.type.try &.empty?
+        raise ArgumentError.new("Type is required to create a mapping.")
       end
 
       # Create the appropriate filesystem config based on the type
-      filesystem_config = case create_args[:type]
-      when "gocryptfs"
-        GX::Models::GocryptfsConfig.new(
-          name: create_args[:name],
-          path: create_args[:path],
-          encrypted_path: create_args[:encrypted_path]
-        )
-      when "sshfs"
-        GX::Models::SshfsConfig.new(
-          name: create_args[:name],
-          path: create_args[:path],
-          remote_user: create_args[:remote_user],
-          remote_host: create_args[:remote_host],
-          remote_path: create_args[:remote_path],
-          remote_port: create_args[:remote_port]
-        )
-      when "httpdirfs"
-        GX::Models::HttpdirfsConfig.new(
-          name: create_args[:name],
-          path: create_args[:path],
-          url: create_args[:url]
-        )
-      else
-        raise ArgumentError.new("Unsupported mapping type: #{create_args[:type]}")
-      end
+      filesystem_config = GX::Models::FilesystemFactory.build(create_options)
 
       # Append the new filesystem config to the root config
-      @config.root.try &.filesystems << filesystem_config
+      @config.root.try do |root|
+        root.filesystems ||= [] of GX::Models::AbstractFilesystemConfig
+        root.filesystems << filesystem_config
+        root.file_system_manager.mount_or_umount(filesystem_config)
+      end
 
-      puts "Mapping '#{create_args[:name]}' created and added to configuration successfully."
+      puts "Mapping '#{create_options.name}' created and added to configuration successfully."
     end
 
     def self.handles_mode
       GX::Types::Mode::MappingCreate
+    end
+
+
+    # validate create_options.PARAMETER and display error with description if
+    # missing
+    macro option_check(create_options, parameter, description)
+      if create_options.{{ parameter.id }}.nil? || create_options.{{ parameter.id }}.try &.empty?
+        raise ArgumentError.new("Parameter for " + {{description}} + " is required")
+      end
     end
   end
 end
