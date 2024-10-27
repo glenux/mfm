@@ -31,11 +31,11 @@ module GX
     getter home_dir : String
     getter root : Models::RootConfig?
 
-    property verbose : Bool
+    property? verbose : Bool
     property mode : Types::Mode
     property path : String?
     property args : AddArgs.class | DelArgs.class | NoArgs.class
-    property auto_open : Bool
+    property? auto_open : Bool
 
     # FIXME: refactor and remove these parts from here
     property help_options : Parsers::Options::HelpOptions?
