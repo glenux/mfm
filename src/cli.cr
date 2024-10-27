@@ -30,13 +30,22 @@ module GX
         Parsers::RootParser.new.build(parser, breadcrumbs, @config)
       end
       pparser.parse(args)
+    rescue e : OptionParser::MissingOption
+      STDERR.puts "ERROR: #{e.message}".colorize(:red)
+      exit(1)
     end
 
     def run
       command = CommandFactory.create_command(@config, @config.mode)
       abort("ERROR: unknown command for mode #{@config.mode}") if command.nil?
 
-      command.try &.execute
+      command.execute
+    rescue e : ArgumentError
+      STDERR.puts "ERROR: #{e.message}".colorize(:red)
+      exit(1)
+    rescue e : Exception
+      STDERR.puts "ERROR: #{e.message}".colorize(:red)
+      exit(1)
     end
   end
 end

@@ -102,7 +102,12 @@ module GX
       file_data = File.read(config_path)
       file_patched = Crinja.render(file_data, {"env" => ENV.to_h})
 
-      root = Models::RootConfig.from_yaml(file_patched)
+      begin
+        root = Models::RootConfig.from_yaml(file_patched)
+      rescue ex : YAML::ParseException
+        STDERR.puts "Error parsing configuration file: #{ex.message}".colorize(:red)
+        exit(1)
+      end
 
       mount_point_base_safe = root.global.mount_point_base
       raise Models::InvalidMountpointError.new("Invalid global mount point") if mount_point_base_safe.nil?
