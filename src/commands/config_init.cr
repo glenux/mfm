@@ -18,7 +18,7 @@ module GX::Commands
       # Override the configuration path if provided
       puts "Configuration file path: #{config_file_path}"
       puts "Configuration file path: #{@config.path}"
-      pp @config
+      # pp @config
       @config.path.try do |path|
         config_file_path = path
         config_dir = File.dirname(path)

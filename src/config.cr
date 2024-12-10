@@ -27,7 +27,6 @@ module GX
     record AddArgs, name : String, path : String
     record DelArgs, name : String
 
-    # getter filesystems : Array(Models::AbstractFilesystemConfig)
     getter home_dir : String
     getter root : Models::RootConfig?
 

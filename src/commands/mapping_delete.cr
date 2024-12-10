@@ -7,11 +7,11 @@ require "./abstract_command"
 
 module GX::Commands
   class MappingDelete < AbstractCommand
-    def initialize(config : GX::Config) # FIXME
+    def initialize(config : GX::Config)
     end
 
     def execute
-      # FIXME: implement
+      # TODO: implement
     end
 
     def self.handles_mode

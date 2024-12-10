@@ -7,7 +7,7 @@ require "./abstract_command"
 
 module GX::Commands
   class MappingCreate < AbstractCommand
-    def initialize(@config : GX::Config) # FIXME
+    def initialize(@config : GX::Config)
       @config.load_from_env
       @config.load_from_file
     end

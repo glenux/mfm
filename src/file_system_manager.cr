@@ -42,10 +42,10 @@ module GX
     end
 
     def auto_open(filesystem)
-      # FIXME: detect xdg-open and use it if possible
-      # FIXME: detect mailcap and use it if no xdg-open found
-      # FIXME: support user-defined command in configuration
-      # FIXME: detect graphical environment
+      # TODO: detect xdg-open and use it if possible
+      # TODO: detect mailcap and use it if no xdg-open found
+      # TODO: support user-defined command in configuration
+      # TODO: detect graphical environment
 
       mount_point_safe = filesystem.mount_point
       raise Models::InvalidMountpointError.new("Invalid filesystem") if mount_point_safe.nil?
@@ -111,7 +111,7 @@ module GX
         }
       end
 
-      # # FIXME: feat: allow to sort by name or by filesystem
+      # FIXME: feat: allow to sort by name or by filesystem
       sorted_values = names_display.values.sort_by!(&.[:filesystem].name)
       result_filesystem_name = Utils::Fzf.run(sorted_values.map(&.[:ansi_name])).strip
       selected_filesystem = names_display[result_filesystem_name][:filesystem]

@@ -8,7 +8,7 @@ require "../config"
 
 module GX::Commands
   class GlobalVersion < AbstractCommand
-    def initialize(config : GX::Config) # FIXME
+    def initialize(config : GX::Config)
     end
 
     def execute

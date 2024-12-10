@@ -10,4 +10,3 @@ class FileStorage
 
   bake_folder "../static"
 end
-
