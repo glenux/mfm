@@ -4,12 +4,14 @@
 # Copyright © 2024 Glenn Y. Rolland <glenux@glenux.net>
 
 require "./abstract_command"
+require "../models/filesystem_factory"
 
 module GX::Commands
   class MappingCreate < AbstractCommand
     def initialize(@config : GX::Config)
       @config.load_from_env
       @config.load_from_file
+      @config.save_to_file
     end
 
     def execute

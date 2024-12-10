@@ -120,5 +120,15 @@ module GX
       end
       @root = root
     end
+
+    def save_to_file
+      return if @path.nil?
+      if @path
+        File.write(@path.to_s, @root.to_yaml)
+      else
+        Log.error { "Configuration path is nil, cannot save configuration." }
+      end
+      Log.info { "Configuration saved to #{@path}" }
+    end
   end
 end
