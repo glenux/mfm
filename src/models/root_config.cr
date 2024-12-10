@@ -36,5 +36,12 @@ module GX::Models
 
     @[YAML::Field(key: "filesystems")]
     getter filesystems : Array(AbstractFilesystemConfig)
+    setter filesystems
+
+    def initialize(version = "1.0.0", global = GlobalConfig.new, filesystems = [] of AbstractFilesystemConfig)
+      @version = version
+      @global = global
+      @filesystems = filesystems
+    end
   end
 end
