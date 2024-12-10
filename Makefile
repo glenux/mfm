@@ -11,7 +11,7 @@ prepare:
 	shards install
 
 build:
-	shards build --error-trace -Dpreview_mt
+	shards build --progress --error-trace -Dpreview_mt
 	@echo SUCCESS
 
 watch: 
