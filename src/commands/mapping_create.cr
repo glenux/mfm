@@ -36,7 +36,6 @@ module GX::Commands
       @config.root.try do |root|
         root.filesystems ||= [] of GX::Models::AbstractFilesystemConfig
         root.filesystems << filesystem_config
-        root.file_system_manager.mount_or_umount(filesystem_config)
       end
 
       puts "Mapping '#{create_options.name}' created and added to configuration successfully."

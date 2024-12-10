@@ -13,25 +13,6 @@ module GX
     def initialize(@config : Config)
     end
 
-    # OBSOLETE:
-    # def mount_filesystem(filesystem : Models::AbstractFilesystemConfig)
-    #   raise Models::InvalidFilesystemError.new("Invalid filesystem") if filesystem.nil?
-    #   if filesystem.mounted?
-    #     Log.info { "Filesystem already mounted." }
-    #     return
-    #   end
-    #   filesystem.mount
-    # end
-
-    # OBSOLETE:
-    # def umount_filesystem(filesystem : Models::AbstractFilesystemConfig)
-    #   raise Models::InvalidFilesystemError.new("Invalid filesystem") if filesystem.nil?
-    #   unless filesystem.mounted?
-    #     Log.info { "Filesystem is not mounted." }
-    #     return
-    #   end
-    #   filesystem.umount
-    # end
 
     def mount_or_umount(selected_filesystem)
       if !selected_filesystem.mounted?
