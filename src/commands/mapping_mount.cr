@@ -13,11 +13,10 @@ module GX::Commands
     def initialize(@config : GX::Config)
       @config.load_from_env
       @config.load_from_file
-      @file_system_manager = FileSystemManager.new(@config)
     end
 
     def execute
-      filesystem = @file_system_manager.choose_filesystem
+      filesystem = @config.root.try &.file_system_manager.choose_filesystem
       raise Models::InvalidFilesystemError.new("Invalid filesystem") if filesystem.nil?
       filesystem.mount
       @file_system_manager.auto_open(filesystem) if filesystem.mounted? && @config.auto_open?

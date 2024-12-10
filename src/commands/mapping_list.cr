@@ -12,7 +12,6 @@ module GX::Commands
     def initialize(@config : GX::Config)
       @config.load_from_env
       @config.load_from_file
-      @file_system_manager = FileSystemManager.new(@config)
     end
 
     def execute
