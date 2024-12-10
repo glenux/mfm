@@ -15,6 +15,15 @@ module GX::Models
   abstract class AbstractFilesystemConfig
     include YAML::Serializable
     # include YAML::Serializable::Strict
+    @@subs = [] of AbstractFilesystemConfig.class
+
+    macro inherited
+      @@subs << {{@type.name.id}}
+    end
+
+    def self.subs
+      @@subs
+    end
 
     use_yaml_discriminator "type", {
       gocryptfs: GoCryptFSConfig,
