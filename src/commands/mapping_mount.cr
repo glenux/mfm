@@ -8,15 +8,17 @@ require "../file_system_manager"
 
 module GX::Commands
   class MappingMount < AbstractCommand
-    # @file_system_manager : FileSystemManager
 
     def initialize(@config : GX::Config)
       @config.load_from_env
       @config.load_from_file
+      @file_system_manager = FileSystemManager.new(@config)
     end
 
     def execute
-      # filesystem = @config.root.try &.file_system_manager.choose_filesystem
+      # get filesystem from config options
+      # filesystem = @config.mapping_mount_options.filesystem
+
       # raise Models::InvalidFilesystemError.new("Invalid filesystem") if filesystem.nil?
       # filesystem.mount
       # @file_system_manager.auto_open(filesystem) if filesystem.mounted? && @config.auto_open?

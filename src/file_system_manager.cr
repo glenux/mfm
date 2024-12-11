@@ -3,7 +3,7 @@
 # SPDX-FileCopyrightText: 2024 Glenn Y. Rolland <glenux@glenux.net>
 # Copyright © 2024 Glenn Y. Rolland <glenux@glenux.net>
 
-# require "./models/abstract_filesystem_config"
+require "./models/abstract_filesystem_config"
 require "./utils/fzf"
 
 module GX
@@ -23,7 +23,7 @@ module GX
     end
 
     def auto_open(filesystem)
-      # TODO: detect xdg-open and use it if possible
+      # TODO: detect xdg-open presence and use it if possible
       # TODO: detect mailcap and use it if no xdg-open found
       # TODO: support user-defined command in configuration
       # TODO: detect graphical environment
@@ -31,7 +31,7 @@ module GX
       mount_point_safe = filesystem.mount_point
       raise Models::InvalidMountpointError.new("Invalid filesystem") if mount_point_safe.nil?
 
-      if graphical_environment?
+      if _graphical_environment?
         process = Process.new(
           "xdg-open", # # FIXME: make configurable
           [mount_point_safe],
@@ -74,23 +74,13 @@ module GX
       config_root.filesystems
     end
 
+    # Get filesystem by name
+    def detect_filesystem(filesystem_name : String) : GX::Models::AbstractFilesystemConfig?
+    end
+
+    # Choose filesystem with fzf
     def choose_filesystem : GX::Models::AbstractFilesystemConfig?
-      names_display = {} of String => NamedTuple(
-        filesystem: Models::AbstractFilesystemConfig,
-        ansi_name: String)
-
-      config_root = @config.root
-      return if config_root.nil?
-
-      config_root.filesystems.each do |filesystem|
-        result_name = _fzf_plain_name(filesystem)
-        ansi_name = _fzf_ansi_name(filesystem)
-
-        names_display[result_name] = {
-          filesystem: filesystem,
-          ansi_name:  ansi_name,
-        }
-      end
+      names_display = _filesystem_table
 
       # FIXME: feat: allow to sort by name or by filesystem
       sorted_values = names_display.values.sort_by!(&.[:filesystem].name)
@@ -117,11 +107,43 @@ module GX
       "#{fs_str} #{filesystem.name} #{suffix}".strip
     end
 
-    private def graphical_environment?
+    private def _graphical_environment?
       if ENV["DISPLAY"]? || ENV["WAYLAND_DISPLAY"]?
         return true
       end
       false
+    end
+
+
+    alias FilesystemTableItem = 
+      NamedTuple(
+        filesystem: Models::AbstractFilesystemConfig,
+        ansi_name: String
+      )
+
+    alias FilesystemTable = 
+      Hash(
+        String, 
+        FilesystemTableItem
+      )
+
+    private def _filesystem_table : FilesystemTable
+      names_display = {} of String => FilesystemTableItem
+
+      config_root = @config.root
+      return {} of String => FilesystemTableItem if config_root.nil?
+
+      config_root.filesystems.each do |filesystem|
+        result_name = _fzf_plain_name(filesystem)
+        ansi_name = _fzf_ansi_name(filesystem)
+
+        names_display[result_name] = {
+          filesystem: filesystem,
+          ansi_name:  ansi_name,
+        }
+      end
+
+      names_display
     end
   end
 end
