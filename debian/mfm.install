@@ -1,0 +1,3 @@
+bin/mfm /usr/bin/
+README.md /usr/share/doc/mfm/
+LICENSE /usr/share/doc/mfm/

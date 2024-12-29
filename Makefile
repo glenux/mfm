@@ -3,7 +3,8 @@
 # SPDX-FileCopyrightText: 2023 Glenn Y. Rolland <glenux@glenux.net>
 # Copyright © 2023 Glenn Y. Rolland <glenux@glenux.net>
 
-PREFIX=/usr
+DESTDIR=
+PREFIX=$(DESTDIR)/usr
 
 all: build
 

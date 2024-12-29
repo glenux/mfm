@@ -1,0 +1,8 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: my-crystal-app
+Source: https://code.apps.glenux.net/glenux/mfm
+
+Files: *
+Copyright: 2024, Glenn Y. Rolland <glenux@glenux.net>
+License: MIT
+ https://opensource.org/license/mit
