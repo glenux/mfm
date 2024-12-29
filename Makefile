@@ -24,9 +24,10 @@ test:
 
 install:
 	install \
+		-D \
 		-m 755 \
-		bin/code-preloader \
-		$(PREFIX)/bin
+		bin/mfm \
+		$(PREFIX)/bin/mfm
 
 .PHONY: spec test build all prepare install
 
