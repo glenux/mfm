@@ -2,7 +2,7 @@ Source: mfm
 Section: utils
 Priority: optional
 Maintainer: Glenn Y. Rolland <glenux@glenux.net>
-Build-Depends: debhelper-compat (= 13), crystal, make
+Build-Depends: debhelper-compat (= 13), crystal, shards, make
 Standards-Version: 4.6.0
 Homepage: https://code.apps.glenux.net/glenux/mfm
 Vcs-Git: https://code.apps.glenux.net/glenux/mfm.git
@@ -10,7 +10,8 @@ Vcs-Browser: https://code.apps.glenux.net/glenux/mfm
 
 Package: mfm
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, libpcre3, libevent-2.1-7, fzf
+Recommends: gocryptfs, httpdirfs, sshfs
 Description: Simple command-line helper for FUSE filesystems
  MFM is a Crystal-lang CLI designed to streamline the management of various
  FUSE filesystems, such as sshfs, gocryptfs, httpdirfs, and more. Through its
