@@ -24,9 +24,10 @@ test:
 
 install:
 	install \
+		-D \
 		-m 755 \
 		bin/mfm \
-		$(PREFIX)/bin
+		$(PREFIX)/bin/mfm
 
 .PHONY: spec test build all prepare install
 
