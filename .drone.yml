@@ -26,6 +26,23 @@ steps:
       - mkdir -p /_cache/bin
       - cp -r bin/mfm /_cache/bin/$PACKAGE_BASENAME
 
+  - name: build:debian
+    image: debian:bullseye
+    environment:
+      PACKAGE_BASENAME: mfm_linux_amd64
+    volumes:
+      - name: cache
+        path: /_cache
+    commands:
+      - apt-get update
+      - apt-get install -y build-essential debhelper devscripts dh-make
+      - mkdir -p /_cache/debian
+      - mkdir -p /_cache/bin
+      - cp -r * /_cache/debian
+      - cd /_cache/debian
+      - dpkg-buildpackage -us -uc
+      - mv ../*.deb /_cache/bin
+
   - name: publish:tag
     image: alpine
     environment:
