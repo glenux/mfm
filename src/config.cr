@@ -5,46 +5,54 @@
 
 require "crinja"
 
-require "./filesystems"
+require "./models"
+require "./types/modes"
+require "./parsers/options/help_options"
+require "./parsers/options/config_options"
+require "./parsers/options/config_init_options"
+require "./commands/abstract_command"
 
 module GX
   class Config
     Log = ::Log.for("config")
 
-    enum Mode
-      ConfigAdd
-      ConfigDelete
-      ConfigEdit
-      ShowVersion
-      Mount
+    class MissingFileError < Exception
     end
 
     record NoArgs
     record AddArgs, name : String, path : String
     record DelArgs, name : String
 
-    getter filesystems : Array(Filesystem)
+    # getter filesystems : Array(Models::AbstractFilesystemConfig)
     getter home_dir : String
+    getter root : Models::RootConfig?
+
     property verbose : Bool
-    property mode : Mode
+    property mode : Types::Mode
     property path : String?
     property args : AddArgs.class | DelArgs.class | NoArgs.class
+    property auto_open : Bool
 
-    def initialize()
-      if !ENV["HOME"]?
-        raise "Home directory not found"
-      end
+    # FIXME: refactor and remove these parts from here
+    property help_options : Parsers::Options::HelpOptions?
+    property config_init_options : Parsers::Options::ConfigInitOptions?
+    property config_options : Parsers::Options::ConfigOptions?
+
+    def initialize
+      raise Models::InvalidEnvironmentError.new("Home directory not found") if !ENV["HOME"]?
       @home_dir = ENV["HOME"]
 
       @verbose = false
-      @mode = Mode::Mount
-      @filesystems = [] of Filesystem
+      @auto_open = false
+
+      @mode = Types::Mode::GlobalTui
+      @filesystems = [] of Models::AbstractFilesystemConfig
       @path = nil
 
       @args = NoArgs
     end
 
-    def detect_config_file()
+    private def detect_config_file
       possible_files = [
         File.join(@home_dir, ".config", "mfm", "config.yaml"),
         File.join(@home_dir, ".config", "mfm", "config.yml"),
@@ -64,39 +72,43 @@ module GX
       end
 
       Log.error { "No configuration file found in any of the standard locations" }
-      raise "Configuration file not found"
+      raise MissingFileError.new("Configuration file not found")
+    end
+
+    def load_from_env
+      if !ENV["FZF_DEFAULT_OPTS"]?
+        # force defaults settings if none defined
+        ENV["FZF_DEFAULT_OPTS"] = "--height 40% --layout=reverse --border"
+      end
     end
 
     def load_from_file
-      path = @path
-      if path.nil?
-        path = detect_config_file()
+      config_path = @path
+      if config_path.nil?
+        config_path = detect_config_file()
       end
-      @path = path
-      @filesystems = [] of Filesystem
+      @path = config_path
 
-      if !File.exists? path
+      if !File.exists? config_path
         Log.error { "File #{path} does not exist!".colorize(:red) }
         exit(1)
       end
-      load_filesystems(path)
-    end
 
-    private def load_filesystems(config_path : String)
       file_data = File.read(config_path)
-      # FIXME: render template on a value basis (instead of global)
-      file_patched = Crinja.render(file_data, {"env" => ENV.to_h}) 
+      file_patched = Crinja.render(file_data, {"env" => ENV.to_h})
 
-      yaml_data = YAML.parse(file_patched)
-      vaults_data = yaml_data["filesystems"].as_a
+      root = Models::RootConfig.from_yaml(file_patched)
 
-      vaults_data.each do |filesystem_data|
-        type = filesystem_data["type"].as_s
-        name = filesystem_data["name"].as_s
-        # encrypted_path = filesystem_data["encrypted_path"].as_s
-        @filesystems << Filesystem.from_yaml(filesystem_data.to_yaml)
-        # @filesystems << Filesystem.new(name, encrypted_path, "#{name}.Open")
+      mount_point_base_safe = root.global.mount_point_base
+      raise Models::InvalidMountpointError.new("Invalid global mount point") if mount_point_base_safe.nil?
+
+      root.filesystems.each do |selected_filesystem|
+        if !selected_filesystem.mount_point?
+          selected_filesystem.mount_point =
+            File.join(mount_point_base_safe, selected_filesystem.mounted_name)
+        end
       end
+      @root = root
     end
   end
 end

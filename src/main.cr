@@ -8,7 +8,6 @@ require "colorize"
 require "json"
 require "log"
 
-require "./filesystems/gocryptfs"
 require "./config"
 require "./cli"
 
@@ -32,9 +31,6 @@ Log.setup do |config|
   end
 end
 
-
-app = GX::Cli.new
-app.parse_command_line(ARGV)
-app.run
-
-
+cli = GX::Cli.new
+cli.parse_command_line(ARGV)
+cli.run

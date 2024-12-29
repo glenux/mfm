@@ -6,6 +6,13 @@
 -->
 
 [![Build Status](https://cicd.apps.glenux.net/api/badges/glenux/mfm/status.svg)](https://cicd.apps.glenux.net/glenux/mfm)
+![License LGPL3.0-or-later](https://img.shields.io/badge/license-LGPL3.0--or--later-blue.svg)
+[![Donate on patreon](https://img.shields.io/badge/patreon-donate-orange.svg)](https://patreon.com/glenux)
+
+> :information_source: This project is available on our self-hosted server and
+> on CodeBerg and GitHub as mirrors. For the latest updates and comprehensive
+> version of our project, please visit our primary repository at:
+> <https://code.apps.glenux.net/glenux/mfm>.
 
 # Minimalist Fuse Manager (MFM)
 
@@ -59,17 +66,56 @@ version](https://code.apps.glenux.net/glenux/mfm/releases) of MFM.
 
 ### Command Line Options
 
+Global
+
 ```
 Usage: mfm [options]
 
-Global options:
-    -c, --config FILE                Specify configuration file
-    -h, --help                       Display this help
+Global options
+    -c, --config FILE                Set configuration file
+    -v, --verbose                    Set more verbosity
+    -o, --open                       Automatically open directory after mount
+    --version                        Show version
+    -h, --help                       Show this help
 
 Commands (not implemented yet):
-    create                           Add a new filesystem
-    delete                           Remove an existing filesystem
-    edit                             Modify the configuration
+    config                           Manage configuration file
+    mapping                          Manage filesystems
+```
+
+Config management
+
+```
+Usage: mfm filesystem [options]
+
+Global options
+    -c, --config FILE                Set configuration file
+    -v, --verbose                    Set more verbosity
+    -o, --open                       Automatically open directory after mount
+    --version                        Show version
+    -h, --help                       Show this help
+
+Commands (not implemented yet):
+    init                             Create init file
+```
+
+Filesystem management
+
+```
+Usage: mfm mapping [options]
+
+Global options
+    -c, --config FILE                Set configuration file
+    -v, --verbose                    Set more verbosity
+    -o, --open                       Automatically open directory after mount
+    --version                        Show version
+    -h, --help                       Show this help
+
+Commands (not implemented yet):
+    list                             List fuse mappings
+    create                           Create new fuse mapping
+    edit                             Edit fuse mapping
+    delete                           Create new fuse mapping
 ```
 
 ### Demo
@@ -84,19 +130,20 @@ detail the filesystem names, types, and respective configurations.
 ### YAML File Format
 
 ```yaml
+---
 version: "1"
 
 global:
-  mountpoint: "/home/user/mnt/{{name}}"
+  mountpoint: "{{env.HOME}}/mnt"
 
 filesystems:
   - type: "gocryptfs"
     name: "Work - SSH Keys"
-    encrypted_path: "/home/user/.ssh/keyring.work"
+    encrypted_path: "/home/user/.ssh/keyring.work.vault"
 
   - type: "sshfs"
     name: "Personal - Media Server"
-    remote_user: "user"
+    remote_user: "{{env.USER}}"
     remote_host: "mediaserver.local"
     remote_path: "/mnt/largedisk/music"
     remote_port: 22
@@ -133,5 +180,5 @@ By contributing, you agree to our code of conduct and license terms.
 
 ## License
 
-GNU GPL-3
+GNU GPL-3 
 

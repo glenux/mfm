@@ -1,9 +1,8 @@
 ---
-
 version: 1
 
 global:
-  mountpoint: "~/mnt"
+  mountpoint: "{{env.HOME}}/mnt"
 
 filesystems:
   - type: gocryptfs
@@ -16,7 +15,7 @@ filesystems:
 
   - type: sshfs
     name: "Personal - Remote Media Server"
-    remote_user: user
+    remote_user: "{{env.USER}}"
     remote_host: mediaserver.local
     remote_port: 22
     remote_path: "/remote/path/to/media"

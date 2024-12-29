@@ -5,17 +5,17 @@
 # Copyright © 2023 Glenn Y. Rolland <glenux@glenux.net>
 
 name: Minimalist FUSE Manager
-version: 0.1.11
+version: 0.2.0
 
 targets:
   mfm:
     main: src/main.cr
 
-# authors:
-#   - name <email@example.com>
+authors:
+  - Glenn Y. Rolland <glenux@glenux.net>
 
-# description: |
-#   Short description of gx-vault
+description: |
+  FIXME. write description
 
 dependencies:
   crinja:
@@ -24,14 +24,11 @@ dependencies:
     github: szTheory/shellwords-crystal
   version_from_shard:
     github: hugopl/version_from_shard
+  tablo:
+    github: hutou/tablo
 
-# dependencies:
-#   pg:
-#     github: will/crystal-pg
-#     version: "~> 0.5"
-
-# development_dependencies:
-#   webmock:
-#     github: manastech/webmock.cr
+development_dependencies:
+  ameba:
+    github: crystal-ameba/ameba
 
 license: GPL-3
