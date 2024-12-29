@@ -37,10 +37,10 @@ describe GX::Utils::BreadCrumbs do
       b1.to_s.should eq("")
 
       b2 = b1 + "test1"
-      b2.to_a.should eq("test1")
+      b2.to_s.should eq("test1")
 
       b3 = b2 + "test2"
-      b3.to_a.should eq("test1 test2")
+      b3.to_s.should eq("test1 test2")
     end
   end
 end
