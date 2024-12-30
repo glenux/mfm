@@ -69,12 +69,13 @@ steps:
         curl -H "Authorization: token $PACKAGE_UPLOAD_TOKEN" \
            --upload-file "/_cache/bin/$PACKAGE_BASENAME" \
            "$PACKAGE_UPLOAD_URL/$DRONE_TAG/$PACKAGE_BASENAME"
-      # - |
-      #   for deb in /_cache/bin/*.deb; do
-      #     curl -H "Authorization: token $PACKAGE_UPLOAD_TOKEN" \
-      #        --upload-file "$deb" \
-      #        "$PACKAGE_UPLOAD_URL/$DRONE_TAG/$(basename $deb)"
-      #   done
+      - |
+        for deb in /_cache/bin/*.deb 0 ; do \
+          test -f "$deb" || continue ; \
+          curl -H "Authorization: token $PACKAGE_UPLOAD_TOKEN" \
+             --upload-file "$deb" \
+             "$PACKAGE_UPLOAD_URL/$DRONE_TAG/$(basename $deb)" ; \
+        done
       - |
         set -x
         curl -X POST \
@@ -100,16 +101,17 @@ steps:
            -H "Content-Type: multipart/form-data" \
            -F "attachment=@/_cache/bin/$PACKAGE_BASENAME" \
            "$RELEASES_URL/$TAG_ID/assets?name=$PACKAGE_BASENAME"
-      # - |
-      #   set -x
-      #   for deb in /_cache/bin/*.deb; do
-      #     curl -X POST \
-      #        -H "Authorization: token $RELEASE_UPLOAD_TOKEN" \
-      #        -H "accept: application/json" \
-      #        -H "Content-Type: multipart/form-data" \
-      #        -F "attachment=@$deb" \
-      #        "$RELEASES_URL/$TAG_ID/assets?name=$(basename $deb)"
-      #   done
+      - |
+        set -x
+        for deb in /_cache/bin/*.deb 0 ; do \
+          test -f "$deb" || continue ; \
+          curl -X POST \
+             -H "Authorization: token $RELEASE_UPLOAD_TOKEN" \
+             -H "accept: application/json" \
+             -H "Content-Type: multipart/form-data" \
+             -F "attachment=@$deb" \
+             "$RELEASES_URL/$TAG_ID/assets?name=$(basename $deb)" ; \
+        done
 
 
 # FIXME: handle multi-arch
