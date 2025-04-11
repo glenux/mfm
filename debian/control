@@ -2,7 +2,7 @@ Source: mfm
 Section: utils
 Priority: optional
 Maintainer: Glenn Y. Rolland <glenux@glenux.net>
-Build-Depends: debhelper-compat (= 13), crystal, shards, make
+Build-Depends: debhelper-compat (= 13), crystal, shards, make, libyaml-dev
 Standards-Version: 4.6.0
 Homepage: https://code.apps.glenux.net/glenux/mfm
 Vcs-Git: https://code.apps.glenux.net/glenux/mfm.git
