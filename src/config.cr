@@ -94,11 +94,34 @@ module GX
         exit(1)
       end
 
+      ## PASS 1
       file_data = File.read(config_path)
-      file_patched = Crinja.render(file_data, {"env" => ENV.to_h})
-
+      file_patched = Crinja.render(
+        file_data, 
+        {
+          "env" => ENV.to_h, 
+          "mfm" => {
+            "global" => {"mount_point_base" => "" }
+          }
+        }
+      )
       root = Models::RootConfig.from_yaml(file_patched)
 
+      mount_point_base_safe = root.global.mount_point_base
+      raise Models::InvalidMountpointError.new("Invalid global mount point") if mount_point_base_safe.nil?
+
+      ## PASS 2
+      file_patched = Crinja.render(
+        file_data, 
+        {
+          "env" => ENV.to_h, 
+          "mfm" => {
+            "global" => {"mount_point_base" => mount_point_base_safe }
+          }
+        }
+      )
+
+      root = Models::RootConfig.from_yaml(file_patched)
       mount_point_base_safe = root.global.mount_point_base
       raise Models::InvalidMountpointError.new("Invalid global mount point") if mount_point_base_safe.nil?
 
