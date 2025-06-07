@@ -10,8 +10,13 @@ mkdir -p _build || true
 
 docker build -t debbuilder --file docker/Dockerfile . 
 docker run -it -v "$(pwd):/app" -v "$(pwd)/_build:/_build" debbuilder \
-	sh -c "ARTIFACTS_DIR=/app/_build debuild --preserve-envvar=ARTIFACTS_DIR -us -uc --buildinfo-option=-u/app/_build --changes-option=-u/app/_build" \
-	|| docker run -it -v "$(pwd):/app" debbuilder 
+	sh -c "cd /app/ \
+		&& dpkg-buildpackage -b -uc -us \
+		&& mv ../*.changes _build \
+		&& mv ../*.buildinfo _build \
+		&& mv ../*.deb _build
+	" \
+	|| docker run -it -v "$(pwd):/app" -v "$(pwd)/_build:/_build" debbuilder 
 
 # dpkg-buildpackage -us -uc
 # debuild
